@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Location Finder</string>
+    <string name="action_settings">Settings</string>
+    <string name="update">Update the Location</string>
+    <string name="searching">Searching&#8230;</string>
+    <string name="test">Testing.. 1.. 2.. 3..</string>
+    <string name="my_location">My Location</string>
+    <string name="enter">Enter</string>
+    <string name="list">My Locations</string>
+    <string name="save">Save this Location</string>
+    <string name="empty">You have no saved locations</string>
+    <string name="db_item">This is a database item</string>
+    <string name="delete">Delete?</string>
+    
+</resources>
