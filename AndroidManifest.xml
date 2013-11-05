@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.LocationList"
+            android:name="edu.mines.locationfinder.RecordTrail"
             android:parentActivityName="edu.mines.locationfinder.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -34,10 +34,10 @@
 
         <activity
             android:name="edu.mines.locationfinder.DetailActivity"
-            android:parentActivityName="edu.mines.locationfinder.LocationList" >
+            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.locationfinder.LocationList" />
+                android:value="com.example.locationfinder.MainActivity" />
         </activity>
 
         <provider
