@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -46,10 +47,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	private static final int DELETE_ID = Menu.FIRST + 1;
-
+	private static final String DEFAULT_NAME = "Some Trail";
 
 	//sets a decimal format
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
+	
 
 	private SimpleCursorAdapter adapter;
 

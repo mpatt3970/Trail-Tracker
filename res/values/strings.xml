@@ -7,7 +7,7 @@
     <string name="searching">Searching&#8230;</string>
     <string name="test">Testing.. 1.. 2.. 3..</string>
     <string name="my_location">My Location</string>
-    <string name="enter">Enter</string>
+    <string name="enter">Enter the Trail Name</string>
     <string name="list">My Locations</string>
     <string name="save">Save this Location</string>
     <string name="empty">You have no saved locations</string>

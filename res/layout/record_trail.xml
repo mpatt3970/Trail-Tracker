@@ -5,8 +5,10 @@
     android:orientation="vertical" >
    
     <EditText 
+        android:id="@+id/enterName"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="@string/enter"/>
     
   
 </LinearLayout>

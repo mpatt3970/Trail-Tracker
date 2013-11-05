@@ -2,13 +2,18 @@ package edu.mines.locationfinder;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
 
 public class RecordTrail extends Activity implements LocationListener {
 	//sets a decimal format
@@ -16,6 +21,8 @@ public class RecordTrail extends Activity implements LocationListener {
 
 	private LocationManager locationManager;
 	private Location location;
+	
+	private EditText enterName;
 
 	private String name;
 	private String latitude;
@@ -25,6 +32,22 @@ public class RecordTrail extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_trail);
+		
+		
+		enterName = (EditText)findViewById(R.id.enterName);
+		enterName.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				name = arg0.toString();
+				Log.d("NAME", name);
+			}
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {}
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3){}
+		});
 	}
 	
 	@Override
