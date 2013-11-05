@@ -42,7 +42,7 @@ public class DetailActivity extends Activity /*implements LoaderManager.LoaderCa
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.options, menu);
+		getMenuInflater().inflate(R.menu.main_options, menu);
 		return true;
 	}
 	

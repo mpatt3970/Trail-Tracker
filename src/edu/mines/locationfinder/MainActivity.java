@@ -74,21 +74,26 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 
 
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.options, menu);
+		getMenuInflater().inflate(R.menu.main_options, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection for action bar
-	    switch (item.getItemId()) {
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle item selection for action bar
+		switch (item.getItemId()) {
+		case R.id.action_new:
+			Intent intent = new Intent(this, RecordTrail.class);
+			startActivity(intent);
+		case R.id.action_edit:
+			//do something
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private void fillData() {
@@ -163,7 +168,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		intent.putExtra(LocationContentProvider.CONTENT_ITEM_TYPE, locationUri);
 		startActivity(intent);
 	}
-	
+
 	/** The menu displayed on a long touch. */
 	@Override
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo )
@@ -173,7 +178,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	}
 
 
-	
+
 	public void setList(ListView list) {
 		this.list = list;
 	}

@@ -2,11 +2,13 @@ package edu.mines.locationfinder;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 public class RecordTrail extends Activity implements LocationListener {
 	//sets a decimal format
@@ -28,8 +30,21 @@ public class RecordTrail extends Activity implements LocationListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.options, menu);
+		getMenuInflater().inflate(R.menu.record_options, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection for action bar
+		switch (item.getItemId()) {
+		case R.id.action_save:
+			//do something
+		case R.id.action_camera:
+			//do something else
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	public void saveLocation() {
@@ -57,9 +72,6 @@ public class RecordTrail extends Activity implements LocationListener {
 
 	}
 	
-	public void endRecording() {
-		
-	}
 	
 	//Required for implements locationlistener
 		// Called when a new location is found by the network location provider.

@@ -14,5 +14,9 @@
     <string name="db_item">This is a database item</string>
     <string name="delete">Delete?</string>
     <string name="action_search">Search</string>
+    <string name="action_new">Start New Trail</string>
+    <string name="action_edit">Edit Names</string>
+    <string name="action_camera">Add a Photo</string>
+    <string name="action_save">Save Trail</string>
     
 </resources>
