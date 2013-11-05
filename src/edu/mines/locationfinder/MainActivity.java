@@ -72,10 +72,14 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		fillData();
 		registerForContextMenu( getListView() );
 
-		
-		
 
-
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.options, menu);
+		return true;
 	}
 
 	private void fillData() {

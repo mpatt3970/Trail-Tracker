@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
 
 public class RecordTrail extends Activity implements LocationListener {
 	//sets a decimal format
@@ -22,6 +23,13 @@ public class RecordTrail extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_trail);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.options, menu);
+		return true;
 	}
 	
 	public void saveLocation() {
