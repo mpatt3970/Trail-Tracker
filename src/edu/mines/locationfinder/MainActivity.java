@@ -81,6 +81,15 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		getMenuInflater().inflate(R.menu.options, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection for action bar
+	    switch (item.getItemId()) {
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
 	private void fillData() {
 		// Fields from the database (projection)
