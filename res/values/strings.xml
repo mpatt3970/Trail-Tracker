@@ -18,5 +18,6 @@
     <string name="action_edit">Edit Names</string>
     <string name="action_camera">Add a Photo</string>
     <string name="action_save">Save Trail</string>
+    <string name="map">Map(Temporary)</string>
     
 </resources>

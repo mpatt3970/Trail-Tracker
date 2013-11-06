@@ -184,5 +184,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	public void setList(ListView list) {
 		this.list = list;
 	}
+	
+	public void map(View view) {
+		Intent myIntent = new Intent(MainActivity.this, MapActivity.class);
+		MainActivity.this.startActivity(myIntent);
+	}
 
 }
