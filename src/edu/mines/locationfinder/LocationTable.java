@@ -16,6 +16,9 @@ public class LocationTable {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_LATITUDE = "latitude";
 	public static final String COLUMN_LONGITUDE = "longitude";
+	public static final String COLUMN_TIME = "time";
+	public static final String COLUMN_HIKE_ID = "hike_id";
+	public static final String COLUMN_PHOTO = "image";
 
 	//creates the table
 	private static final String DATABASE_CREATE = "create table " 
@@ -24,7 +27,10 @@ public class LocationTable {
 			+ COLUMN_ID + " integer primary key autoincrement, " 
 			+ COLUMN_NAME + " text not null, " 
 			+ COLUMN_LATITUDE + " text not null," 
-			+ COLUMN_LONGITUDE + " text not null" 
+			+ COLUMN_LONGITUDE + " text not null," 
+			+ COLUMN_TIME + " text not null,"
+			+ COLUMN_HIKE_ID + " text not null,"
+			+ COLUMN_PHOTO + " text not null"
 			+ ");";
 	
 

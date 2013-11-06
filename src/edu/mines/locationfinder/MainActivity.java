@@ -19,30 +19,28 @@
 
 package edu.mines.locationfinder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import android.app.ListActivity;
 import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -96,6 +94,27 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void startRecording() {
+		Intent intent = new Intent(this, RecordTrail.class);
+		Uri uri = LocationContentProvider.CONTENT_URI;
+		String[] projection = new String[] {LocationTable.COLUMN_HIKE_ID};
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			while(cursor.moveToNext()) {
+				String idStr = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_HIKE_ID));
+				Integer id = Integer.parseInt(idStr);
+				ids.add(id);
+			}
+			intent.putExtra("hike_id", Collections.max(ids) + 1);
+		} else {
+			intent.putExtra("hike_id", 0);
+		}
+		cursor.close();
+		startActivity(intent);
 	}
 
 	private void fillData() {
