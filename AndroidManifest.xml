@@ -45,10 +45,10 @@
         </activity>
         <activity
             android:name="edu.mines.locationfinder.RecordTrail"
-            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
+            android:parentActivityName="edu.mines.locationfinder.EnterName" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.locationfinder.MainActivity" />
+                android:value="com.example.locationfinder.EnterName" />
         </activity>
         <activity
             android:name="edu.mines.locationfinder.MapActivity"
@@ -64,12 +64,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.locationfinder.MainActivity" />
         </activity>
+        <activity
+            android:name="edu.mines.locationfinder.EnterName"
+            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.locationfinder.MainActivity" />
+        </activity>
 
         <provider
-            android:name=".LocationContentProvider"
+            android:name="edu.mines.locationfinder.LocationContentProvider"
             android:authorities="edu.mines.locationfinder.contentprovider"
             android:exported="false" >
         </provider>
+
     </application>
 
 </manifest>

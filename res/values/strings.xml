@@ -19,5 +19,9 @@
     <string name="action_camera">Add a Photo</string>
     <string name="action_save">Save Trail</string>
     <string name="map">Map(Temporary)</string>
-    
+    <string name="title_activity_enter_name">EnterName</string>
+    <string name="notSure">Not sure what should be displayed in this part</string>
+    <string name="no_proceed">Before recording, enter a unique trail name</string>
+    <string name="yes_proceed">Click here to embark on</string>
+
 </resources>

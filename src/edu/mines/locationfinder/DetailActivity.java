@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class DetailActivity extends Activity /*implements LoaderManager.LoaderCallbacks<Cursor>*/ {
+public class DetailActivity extends Activity {
 
 	private SimpleCursorAdapter adapter;
 	private Uri locationUri;

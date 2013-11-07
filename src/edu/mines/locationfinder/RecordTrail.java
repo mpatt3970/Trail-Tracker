@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class RecordTrail extends Activity implements LocationListener {
 	//sets a decimal format
@@ -23,13 +24,13 @@ public class RecordTrail extends Activity implements LocationListener {
 	private LocationManager locationManager;
 	private Location location;
 	
-	private EditText enterName;
+	private TextView hikeName;
+	
 
 	private String name;
 	private String latitude;
 	private String longitude;
 	private String timeStr;
-	private Integer hikeID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +38,11 @@ public class RecordTrail extends Activity implements LocationListener {
 		setContentView(R.layout.record_trail);
 		
 		Intent intent = getIntent();
-		hikeID = intent.getIntExtra("hike_id", 0);
-		Log.d("ID", hikeID.toString());
 		
-		name = "";
+		name = intent.getStringExtra("name");
 		
-		enterName = (EditText)findViewById(R.id.enterName);
-		enterName.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				name = arg0.toString();
-			}
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {}
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {}
-		});
-		
+		hikeName = (TextView)findViewById(R.id.hike_name);
+		hikeName.setText(name);
 		
 		this.locationManager = (LocationManager)this.getSystemService( Context.LOCATION_SERVICE );
 	}
@@ -87,7 +74,6 @@ public class RecordTrail extends Activity implements LocationListener {
 		values.put(LocationTable.COLUMN_LATITUDE, latitude);
 		values.put(LocationTable.COLUMN_LONGITUDE, longitude);
 		values.put(LocationTable.COLUMN_TIME, timeStr);
-		values.put(LocationTable.COLUMN_HIKE_ID, hikeID);
 		values.put(LocationTable.COLUMN_PHOTO, "");
 		
 

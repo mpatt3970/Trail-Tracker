@@ -87,7 +87,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		// Handle item selection for action bar
 		switch (item.getItemId()) {
 		case R.id.action_new:
-			Intent intent = new Intent(this, RecordTrail.class);
+			Intent intent = new Intent(this, EnterName.class);
 			startActivity(intent);
 		case R.id.action_edit:
 			//do something
@@ -96,26 +96,6 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		}
 	}
 	
-	public void startRecording() {
-		Intent intent = new Intent(this, RecordTrail.class);
-		Uri uri = LocationContentProvider.CONTENT_URI;
-		String[] projection = new String[] {LocationTable.COLUMN_HIKE_ID};
-		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			ArrayList<Integer> ids = new ArrayList<Integer>();
-			while(cursor.moveToNext()) {
-				String idStr = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_HIKE_ID));
-				Integer id = Integer.parseInt(idStr);
-				ids.add(id);
-			}
-			intent.putExtra("hike_id", Collections.max(ids) + 1);
-		} else {
-			intent.putExtra("hike_id", 0);
-		}
-		cursor.close();
-		startActivity(intent);
-	}
 
 	private void fillData() {
 		// Fields from the database (projection)
