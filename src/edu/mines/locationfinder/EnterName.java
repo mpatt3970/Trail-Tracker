@@ -68,6 +68,7 @@ public class EnterName extends Activity implements OnClickListener {
 	public void checkName() {
 		/**
 		 * This function check is the name has been used and changes it if it has.
+		 * Unique names are necessary so two hikes don't get plotted together leading to nonsensical results
 		 *
 		 */
 
@@ -79,10 +80,27 @@ public class EnterName extends Activity implements OnClickListener {
 			ArrayList<String> names = new ArrayList<String>();
 			names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
 			while (cursor.moveToNext()) {
-				names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
+				String nextName = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME));
+				if (! names.contains(nextName)) {
+					// only add unique names
+					names.add(nextName);
+				}
 			}
-			for (String s : names) {
-				Log.d("NAME", s);
+			if (names.contains(name)) {
+				// if this name has already been used
+				Integer counter = 1;
+				while(true) {
+					// loop around until a variation on names has next been used
+					String namePlusOne = name + "(" + counter.toString() + ")";
+					if (names.contains(namePlusOne)) {
+						// if this number has been used, increase by 1 and try again
+						counter++;
+					} else {
+						// finally we found a valid number, set the name to this new name and break
+						name = namePlusOne;
+						break;
+					}
+				}
 			}
 		}
 		cursor.close();
