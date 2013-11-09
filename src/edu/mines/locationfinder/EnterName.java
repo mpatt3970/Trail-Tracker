@@ -1,10 +1,9 @@
 package edu.mines.locationfinder;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 
 public class EnterName extends Activity implements OnClickListener {
 
@@ -74,15 +72,22 @@ public class EnterName extends Activity implements OnClickListener {
 		 */
 
 		// open a cursor, get an array of previous names
-		String[] projection = { LocationTable.COLUMN_NAME };
-		//Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
-		/*if (cursor != null) {
+		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_NAME };
+		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
+		if (cursor != null) {
 			cursor.moveToFirst();
-			
-			String n = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME));
-			Log.d("name!!!", n);
-		}*/
-	
+			ArrayList<String> names = new ArrayList<String>();
+			names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
+			while (cursor.moveToNext()) {
+				names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
+			}
+			for (String s : names) {
+				Log.d("NAME", s);
+			}
+		}
+		cursor.close();
+
+		
 	}
 
 	public void proceed() {
