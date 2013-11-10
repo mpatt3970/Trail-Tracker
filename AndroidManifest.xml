@@ -78,6 +78,12 @@
             android:exported="false" >
         </provider>
 
+        <receiver android:name="edu.mines.locationfinder.LocationReceiver" >
+            <intent-filter>
+                <action android:name="edu.mines.locationfinder.LOCATION_READY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

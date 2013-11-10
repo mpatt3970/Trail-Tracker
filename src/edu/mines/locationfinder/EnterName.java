@@ -27,7 +27,7 @@ public class EnterName extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_enter_name);
-
+		
 		name = "";
 
 		proceed = (Button)findViewById(R.id.proceed);

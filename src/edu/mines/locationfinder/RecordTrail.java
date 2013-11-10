@@ -1,26 +1,29 @@
 package edu.mines.locationfinder;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
 
-public class RecordTrail extends Activity implements LocationListener {
+
+// looked at http://android-developers.blogspot.com/2011/06/deep-dive-into-location.html for clarification on the PendingIntent
+// and this question:  http://stackoverflow.com/questions/1990855/android-how-to-get-location-information-from-intent-bundle-extras-when-using-lo
+public class RecordTrail extends Activity {
 	//sets a decimal format
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
-
+	private static long minTime = 60000; // in milliseconds. the minimum time to wait before updating location again
+	private static float minDistance = 300; // in meters. the minimum distance to go before updating location
+	
 	private LocationManager locationManager;
 	private Location location;
 	
@@ -48,6 +51,12 @@ public class RecordTrail extends Activity implements LocationListener {
 	}
 	
 	@Override
+	public void onStart() {
+		super.onStart();
+		updateLocation();
+	}
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.record_options, menu);
@@ -59,7 +68,7 @@ public class RecordTrail extends Activity implements LocationListener {
 		// Handle item selection for action bar
 		switch (item.getItemId()) {
 		case R.id.action_save:
-			updateLocation();
+			// do something
 		case R.id.action_camera:
 			//do something else
 		default:
@@ -90,11 +99,14 @@ public class RecordTrail extends Activity implements LocationListener {
 		//added implements locationlistener
 		//added a locationManager and a location as instance variables
 
+		Intent activeIntent = new Intent("edu.mines.locationfinder.LOCATION_READY");
+		
+		PendingIntent locationListenerPendingIntent = PendingIntent.getBroadcast(this, 0, activeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		// Register the listener with the Location Manager to receive location updates.
-		this.locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, this );
+		this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListenerPendingIntent);
 		
 	}
-	
+	/*
 	
 	//Required for implements locationlistener
 		// Called when a new location is found by the network location provider.
@@ -131,6 +143,8 @@ public class RecordTrail extends Activity implements LocationListener {
 		public void onProviderDisabled( String provider )
 		{
 		}
+		
+		*/
 		
 		public void setLocation(Location location) {
 			this.location = location;
