@@ -32,8 +32,7 @@ public class DetailActivity extends Activity {
 		longView = (TextView)findViewById(R.id.location_long);
 		
 		Bundle extras = getIntent().getExtras();
-		locationUri = extras
-				.getParcelable(LocationContentProvider.CONTENT_ITEM_TYPE);
+		locationUri = extras.getParcelable(LocationContentProvider.CONTENT_ITEM_TYPE);
 
 		fillData();
 
@@ -51,7 +50,7 @@ public class DetailActivity extends Activity {
 	* places text into the appropriate textviews by pointing a cursor at a query at the specific uri
 	*/
 		// Fields from the database
-		String[] projection = new String[] { LocationTable.COLUMN_NAME, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE };
+		String[] projection = new String[] { LocationTable.COLUMN_ID, LocationTable.COLUMN_NAME, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE };
 
 		//cursor to a query of the specific uri
 		Cursor cursor = getContentResolver().query(locationUri, projection, null, null,
