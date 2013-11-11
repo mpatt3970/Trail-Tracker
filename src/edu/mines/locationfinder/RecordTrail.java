@@ -20,8 +20,8 @@ import android.widget.TextView;
 // and this question:  http://stackoverflow.com/questions/1990855/android-how-to-get-location-information-from-intent-bundle-extras-when-using-lo
 public class RecordTrail extends Activity {
 
-	private static long minTime = 60000; // in milliseconds. the minimum time to wait before updating location again
-	private static float minDistance = 300; // in meters. the minimum distance to go before updating location
+	private static long minTime = 1000; // in milliseconds. the minimum time to wait before updating location again
+	private static float minDistance = 3; // in meters. the minimum distance to go before updating location
 
 	private LocationManager locationManager;
 	private Location location;

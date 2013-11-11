@@ -23,24 +23,27 @@ public class MapActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
+		list = new ArrayList<LocationPair>();
 		this.getLocations();
 		// Get a handle to the Map Fragment
 		GoogleMap map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		boolean first = true;
-		LocationPair begin = null;
-		LocationPair end = null;
-		for(LocationPair l: list) {
-			if(first) {
-				begin = l;
-				first = false;
-			} else {
-				begin = end;
-				end = l;
-				map.addPolyline(new PolylineOptions().add(new LatLng(Double.parseDouble(begin.getLatitude()), Double.parseDouble(begin.getLongitude())), new LatLng(Double.parseDouble(end.getLatitude()), Double.parseDouble(end.getLongitude()))).width(5).color(Color.RED));
+		if(!list.isEmpty()) {
+			LocationPair begin = null;
+			LocationPair end = null;
+			for(LocationPair l: list) {
+				if(first) {
+					end = l;
+					first = false;
+				} else {
+					begin = end;
+					end = l;
+					map.addPolyline(new PolylineOptions().add(new LatLng(Double.parseDouble(begin.getLatitude()), Double.parseDouble(begin.getLongitude())), new LatLng(Double.parseDouble(end.getLatitude()), Double.parseDouble(end.getLongitude()))).width(5).color(Color.RED));
+				}
 			}
+			map.setMyLocationEnabled(true);
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(list.get(0).getLatitude()), Double.parseDouble(list.get(0).getLongitude())), 16));
 		}
-		map.setMyLocationEnabled(true);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(list.get(list.size()/2).getLatitude()), Double.parseDouble(list.get(list.size()/2).getLatitude())), 13));
 	}
 
 	public void getLocations() {
@@ -48,11 +51,10 @@ public class MapActivity extends Activity {
 		 * This function check is the name has been used and changes it if it has.
 		 *
 		 */
-		list = new ArrayList<LocationPair>();
 		// open a cursor, get an array of previous names
 		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE };
 		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
-		if (cursor != null && cursor.getCount() != 0) {
+		if ((cursor != null) && (cursor.getCount() > 0)) {
 			cursor.moveToFirst();
 			int counter  = 0;
 			list.add(new LocationPair(counter, cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE)), cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE))));

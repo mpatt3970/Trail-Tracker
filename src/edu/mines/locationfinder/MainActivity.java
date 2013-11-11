@@ -38,6 +38,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 
 	//sets a decimal format
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
-	
+
 
 	private SimpleCursorAdapter adapter;
 
@@ -63,6 +64,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	private String longitude;
 	private String name;
 
+	private int clickCounter = 0;
+
+	private ArrayList<String> names = new ArrayList<String>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,6 +76,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		setList((ListView)findViewById(android.R.id.list));
 		fillData();
 		registerForContextMenu( getListView() );
+
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+		setListAdapter(adapter);
 
 
 	}
@@ -95,25 +104,25 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 
 	private void fillData() {
-		// Fields from the database (projection)
-
-		// Fill this array with the values that you want to grab
-		// gets the projection from the table
-		String[] from = new String[] { LocationTable.COLUMN_NAME };
-
-		// Fill this array with the ids of TextViews that you want to setText in from the above array
-		// Fields on the UI to which we map
-		int[] to = new int[] { R.id.row };
-
-		// creates loader
-		getLoaderManager().initLoader(0, null, this);
-		// creates a new cursorAdapter, using the layout from row.xml, the db projection, and the id at row.xml
-		adapter = new SimpleCursorAdapter(this, R.layout.row, null, from, to, 0);
-		//calls the newly created adapter
-		setListAdapter(adapter);
+		// open a cursor, get an array of previous names
+		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_NAME };
+		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
+		if(cursor != null && cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			names = new ArrayList<String>();
+			names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
+			while (cursor.moveToNext()) {
+				String nextName = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME));
+				if (! names.contains(nextName)) {
+					// only add unique names
+					names.add(nextName);
+				}
+			}
+		} 
+		cursor.close();
 	}
 
 	// creates a new loader after the initLoader () call
@@ -145,7 +154,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		{
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
-			Uri uri = Uri.parse( LocationContentProvider.CONTENT_URI + "/" + info.id );
+			Uri uri =  LocationContentProvider.CONTENT_URI;
 			getContentResolver().delete( uri, null, null );
 			fillData();
 			return true;
@@ -164,6 +173,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		 * passes the uri of that activity to DetailActivity in  an intent
 		 */
 		super.onListItemClick( l, v, position, id );
+
+		Intent myIntent = new Intent(MainActivity.this, MapActivity.class);
+		MainActivity.this.startActivity(myIntent);
+
 		Intent intent = new Intent(this, DetailActivity.class);
 		Uri locationUri = Uri.parse(LocationContentProvider.CONTENT_URI + "/" + id);
 		intent.putExtra(LocationContentProvider.CONTENT_ITEM_TYPE, locationUri);
@@ -178,15 +191,18 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		menu.add( 0, DELETE_ID, 0, R.string.delete );
 	}
 
-
-
 	public void setList(ListView list) {
 		this.list = list;
 	}
-	
+
 	public void map(View view) {
 		Intent myIntent = new Intent(MainActivity.this, MapActivity.class);
 		MainActivity.this.startActivity(myIntent);
+	}
+
+	public void addItems(View v) {
+		names.add("Clicked : " + clickCounter++);
+		adapter.notifyDataSetChanged();
 	}
 
 }
