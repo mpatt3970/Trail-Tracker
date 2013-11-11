@@ -25,6 +25,7 @@ public class LocationReceiver extends BroadcastReceiver {
 		Bundle b = intent.getExtras();
 		Location location = (Location)b.get(android.location.LocationManager.KEY_LOCATION_CHANGED);
 		name = b.getString("name");
+		Log.d("Received", "location");
 		if (location != null) {
 			Time now = new Time();
 			now.setToNow();

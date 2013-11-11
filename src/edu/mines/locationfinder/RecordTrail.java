@@ -20,19 +20,15 @@ import android.widget.TextView;
 // and this question:  http://stackoverflow.com/questions/1990855/android-how-to-get-location-information-from-intent-bundle-extras-when-using-lo
 public class RecordTrail extends Activity {
 
-	private static long minTime = 60000; // in milliseconds. the minimum time to wait before updating location again
-	private static float minDistance = 300; // in meters. the minimum distance to go before updating location
+	private static long minTime = 1000; // in milliseconds. the minimum time to wait before updating location again
+	private static float minDistance = 3; // in meters. the minimum distance to go before updating location
 
 	private LocationManager locationManager;
-	private Location location;
 
 	private TextView hikeName;
 
 
 	private String name;
-	private String latitude;
-	private String longitude;
-	private String timeStr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +84,5 @@ public class RecordTrail extends Activity {
 		// Register the listener with the Location Manager to receive location updates.
 		this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListenerPendingIntent);
 
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
 	}
 }
