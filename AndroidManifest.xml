@@ -30,10 +30,6 @@
         android:icon="@drawable/ic_launcher_footprints"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAVfdinhEUvi652rSAO00oEBQCEwVODyDk" />
-
         <activity
             android:name="edu.mines.locationfinder.MainActivity"
             android:label="@string/app_name" >
@@ -78,6 +74,12 @@
             android:exported="false" >
         </provider>
 
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBpAD7K9fUrJV827lxKSZdUkRHUi7Nc3sI" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
