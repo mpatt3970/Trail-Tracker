@@ -11,5 +11,20 @@
         android:icon="@drawable/ic_action_save"
         android:title="@string/action_save"
         android:showAsAction="always" />
+    
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
+    
+    <item 
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:showAsAction="never"/>
+    
+    <item 
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        android:showAsAction="never"/>
 
 </menu>

@@ -8,45 +8,43 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class EnterName extends Activity implements OnClickListener {
+public class EditName extends Activity implements OnClickListener {
 
-	
 	private String name;
-	private EditText enterName;
-	private Button proceed;
-
+	private EditText editName;
+	private Button saveName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_enter_name);
-		
-		name = "";
+		setContentView(R.layout.activity_edit_name);
 
-		proceed = (Button)findViewById(R.id.proceed);
-		proceed.setEnabled(false);
-		proceed.setText(R.string.no_proceed);
-		proceed.setOnClickListener(this);
+		Intent intent = getIntent();
+		name = intent.getStringExtra("name");
 
-		enterName = (EditText)findViewById(R.id.enterName);
-		enterName.addTextChangedListener(new TextWatcher() {
+		saveName = (Button)findViewById(R.id.save_edit);
+		saveName.setOnClickListener(this);
+
+		editName = (EditText)findViewById(R.id.edit_name);
+		editName.setText(name);
+		editName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void afterTextChanged(Editable arg0) {
 				name = arg0.toString();
 				if (name.equals("")) {
-					proceed.setEnabled(false);
-					proceed.setText(R.string.no_proceed);
+					saveName.setEnabled(false);
+					saveName.setText(R.string.no_proceed);
 				} else {
-					proceed.setEnabled(true);
-					proceed.setText(getResources().getString(R.string.yes_proceed) + " " + name);
+					saveName.setEnabled(true);
+					saveName.setText(getResources().getString(R.string.yes_proceed) + " " + name);
 				}
 			}
 			@Override
@@ -56,13 +54,12 @@ public class EnterName extends Activity implements OnClickListener {
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {}
 		});
-
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.enter_name, menu);
+		getMenuInflater().inflate(R.menu.edit_name, menu);
 		return true;
 	}
 	
@@ -86,7 +83,7 @@ public class EnterName extends Activity implements OnClickListener {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	
 	public void checkName() {
 		/**
 		 * This function check is the name has been used and changes it if it has.
@@ -126,25 +123,20 @@ public class EnterName extends Activity implements OnClickListener {
 			}
 		}
 		cursor.close();
-
-		
 	}
-
-	public void proceed() {
+	
+	public void save() {
 		checkName();
-		Intent intent = new Intent(this, RecordTrail.class);
-		intent.putExtra("name", name);
-		startActivity(intent);
 	}
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.proceed:
-			proceed();
+		switch(v.getId()) {
+		case R.id.action_save:
+			save();
 		default:
-			//do nothing
 		}
 
 	}
+
 }

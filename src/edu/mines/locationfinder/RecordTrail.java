@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 // looked at http://android-developers.blogspot.com/2011/06/deep-dive-into-location.html for clarification on the PendingIntent
@@ -59,9 +60,22 @@ public class RecordTrail extends Activity {
 		// Handle item selection for action bar
 		switch (item.getItemId()) {
 		case R.id.action_save:
-			// do something
+			Toast.makeText(this, "Saving functionality to be added soon", Toast.LENGTH_LONG).show();
+			return super.onOptionsItemSelected(item);
 		case R.id.action_camera:
-			//do something else
+			Toast.makeText(this, "Camera functionality to be added soon", Toast.LENGTH_LONG).show();
+			return super.onOptionsItemSelected(item);
+		case R.id.action_settings:
+        	Intent settings = new Intent(this, Settings.class);
+            startActivity(settings);
+        case R.id.action_help:
+        	Intent help = new Intent(this, Help.class);
+            startActivity(help);
+			return super.onOptionsItemSelected(item);
+        case R.id.action_about:
+        	Intent about = new Intent(this, About.class);
+            startActivity(about);
+			return super.onOptionsItemSelected(item);
 		default:
 			return super.onOptionsItemSelected(item);
 		}

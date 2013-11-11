@@ -1,13 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/action_new"
-        android:icon="@drawable/ic_action_new"
-        android:title="@string/action_new"
-        android:showAsAction="always"
-        />
-    
-    <item
+   <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:showAsAction="never" />
@@ -21,6 +14,5 @@
         android:id="@+id/action_about"
         android:title="@string/action_about"
         android:showAsAction="never"/>
-    
-   
+
 </menu>

@@ -88,6 +88,23 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="edu.mines.locationfinder.EditName"
+            android:label="@string/title_activity_edit_name" >
+        </activity>
+        <activity
+            android:name="edu.mines.locationfinder.Settings"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="edu.mines.locationfinder.Help"
+            android:label="@string/title_activity_help" >
+        </activity>
+        <activity
+            android:name="edu.mines.locationfinder.About"
+            android:label="@string/title_activity_about" >
+        </activity>
     </application>
 
 </manifest>

@@ -31,7 +31,7 @@ public class MapActivity extends Activity {
 		LocationPair end = null;
 		for(LocationPair l: list) {
 			if(first) {
-				begin = l;
+				end = l;
 				first = false;
 			} else {
 				begin = end;
