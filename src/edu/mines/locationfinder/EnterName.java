@@ -75,7 +75,7 @@ public class EnterName extends Activity implements OnClickListener {
 		// open a cursor, get an array of previous names
 		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_NAME };
 		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
-		if (cursor != null) {
+		if (cursor != null && cursor.getCount() > 0) {
 			cursor.moveToFirst();
 			ArrayList<String> names = new ArrayList<String>();
 			names.add(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)));
