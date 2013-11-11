@@ -2,15 +2,11 @@ package edu.mines.locationfinder;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -76,13 +72,14 @@ public class RecordTrail extends Activity {
 		//added a uses-permission statement to the manifest
 		//added implements locationlistener
 		//added a locationManager and a location as instance variables
-
+		
+		Log.d("yo", "beginUpdate");
 		Intent activeIntent = new Intent("edu.mines.locationfinder.LOCATION_READY");
 		activeIntent.putExtra("name", name);
 		
 		PendingIntent locationListenerPendingIntent = PendingIntent.getBroadcast(this, 0, activeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		// Register the listener with the Location Manager to receive location updates.
 		this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListenerPendingIntent);
-
+		Log.d("yo", "endUpdate");
 	}
 }
