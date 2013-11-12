@@ -23,6 +23,7 @@ public class RecordTrail extends Activity {
 	private LocationManager locationManager;
 
 	private TextView hikeName;
+	private Intent pendingIntent;
 
 
 	private String name;
@@ -43,12 +44,6 @@ public class RecordTrail extends Activity {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		updateLocation();
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.record_options, menu);
@@ -60,7 +55,11 @@ public class RecordTrail extends Activity {
 		// Handle item selection for action bar
 		switch (item.getItemId()) {
 		case R.id.action_save:
-			Toast.makeText(this, "Saving functionality to be added soon", Toast.LENGTH_LONG).show();
+			// stop and show the trail
+			cancelUpdates();
+			Intent showTrail = new Intent(this, MapActivity.class);
+			showTrail.putExtra("name", name);
+			startActivity(showTrail);
 			return super.onOptionsItemSelected(item);
 		case R.id.action_camera:
 			Toast.makeText(this, "Camera functionality to be added soon", Toast.LENGTH_LONG).show();
@@ -87,13 +86,30 @@ public class RecordTrail extends Activity {
 		//added implements locationlistener
 		//added a locationManager and a location as instance variables
 		
-		Log.d("yo", "beginUpdate");
-		Intent activeIntent = new Intent("edu.mines.locationfinder.LOCATION_READY");
-		activeIntent.putExtra("name", name);
+		pendingIntent = new Intent("edu.mines.locationfinder.LOCATION_READY");
+		pendingIntent.putExtra("name", name);
 		
-		PendingIntent locationListenerPendingIntent = PendingIntent.getBroadcast(this, 0, activeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent locationListenerPendingIntent = PendingIntent.getBroadcast(this, 0, pendingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		// Register the listener with the Location Manager to receive location updates.
 		this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locationListenerPendingIntent);
-		Log.d("yo", "endUpdate");
+	}
+	
+	public void cancelUpdates() {
+		PendingIntent.getBroadcast(this, 0, pendingIntent, PendingIntent.FLAG_UPDATE_CURRENT).cancel();
+	}
+	
+	// LifeCycle functions
+	// Use onStart and onStop because this app should run in the background
+	// It is a foreground process to adjust we can decrease the accuracy
+	@Override
+	public void onStart() {
+		super.onStart();
+		updateLocation();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		cancelUpdates();
 	}
 }
