@@ -20,7 +20,6 @@
 package edu.mines.locationfinder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import android.app.ListActivity;
 import android.app.LoaderManager;
@@ -32,6 +31,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -185,14 +185,14 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		 * passes the uri of that activity to DetailActivity in an intent
 		 */
 		super.onListItemClick( l, v, position, id );
-
+		
+		// pass the selected name to the mapActivity
+		TextView text = (TextView)v;
+		String selected = text.getText().toString();
 		Intent myIntent = new Intent(this, MapActivity.class);
+		myIntent.putExtra("name", selected);
 		startActivity(myIntent);
-/*
-		Intent intent = new Intent(this, DetailActivity.class);
-		Uri locationUri = Uri.parse(LocationContentProvider.CONTENT_URI + "/" + id);
-		intent.putExtra(LocationContentProvider.CONTENT_ITEM_TYPE, locationUri);
-		startActivity(intent);*/
+
 	}
 
 	/** The menu displayed on a long touch. */
