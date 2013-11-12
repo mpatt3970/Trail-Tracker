@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,10 +16,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapActivity extends Activity {
+	
+	public static final String PREF = "MyPrefsFile"; //filename for the shared preferences file
+	private SharedPreferences settings;
+	
 	private ArrayList<LocationPair> list;
 	private String name;
-	
-	
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,7 +32,7 @@ public class MapActivity extends Activity {
 		Intent intent = getIntent();
 		name = "";
 		name = intent.getStringExtra("name");
-		
+
 		list = new ArrayList<LocationPair>();
 		this.getLocations();
 		// Get a handle to the Map Fragment
@@ -76,7 +81,7 @@ public class MapActivity extends Activity {
 		}
 		cursor.close();
 	}
-	
+
 	public class LocationPair<number, latitude, longitude> {
 
 		private final int number;
@@ -101,6 +106,35 @@ public class MapActivity extends Activity {
 			return longitude;
 		}
 
+	}
+
+	// lifecycle functions
+	// save the name onPause and restore it onResume
+	@Override
+	public void onPause() {
+		super.onPause();
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("name", name);
+		editor.commit();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		settings = getSharedPreferences(PREF, 0);
+		if (settings.contains("name")) {
+			name = settings.getString("name", "");
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.clear();
+		editor.commit();
 	}
 
 }

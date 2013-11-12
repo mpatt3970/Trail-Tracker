@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,7 +19,9 @@ import android.widget.EditText;
 
 public class EnterName extends Activity implements OnClickListener {
 
-	
+	 
+	public static final String PREF = "MyPrefsFile"; //filename for the shared preferences file
+	private SharedPreferences settings;
 	private String name;
 	private EditText enterName;
 	private Button proceed;
@@ -30,7 +33,8 @@ public class EnterName extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_enter_name);
 		
 		name = "";
-
+		
+		
 		proceed = (Button)findViewById(R.id.proceed);
 		proceed.setEnabled(false);
 		proceed.setText(R.string.no_proceed);
@@ -146,5 +150,35 @@ public class EnterName extends Activity implements OnClickListener {
 			//do nothing
 		}
 
+	}
+	
+	// lifecycle functions
+	// save the name onPause and restore it onResume
+	@Override
+	public void onPause() {
+		super.onPause();
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("name", name);
+		editor.commit();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		settings = getSharedPreferences(PREF, 0);
+		if (settings.contains("name")) {
+			name = settings.getString("name", "");
+			enterName.setText(name);
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.clear();
+		editor.commit();
 	}
 }
