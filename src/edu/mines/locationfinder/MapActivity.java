@@ -16,14 +16,17 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapActivity extends Activity {
 	private ArrayList<LocationPair> list;
-
+	private String name;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 		// get the name to know which hike to generate
 		Intent intent = getIntent();
-		String name = intent.getStringExtra("name");
+		name = "";
+		name = intent.getStringExtra("name");
 		
 		list = new ArrayList<LocationPair>();
 		this.getLocations();
@@ -51,25 +54,29 @@ public class MapActivity extends Activity {
 
 	public void getLocations() {
 		/**
-		 * This function check is the name has been used and changes it if it has.
+		 * This function gets the list of locations
 		 *
 		 */
-		// open a cursor, get an array of previous names
-		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE };
+		// open a cursor, get an array of previous names and lats and lons
+		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE, LocationTable.COLUMN_NAME };
 		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
 		if ((cursor != null) && (cursor.getCount() > 0)) {
 			cursor.moveToFirst();
 			int counter  = 0;
-			list.add(new LocationPair(counter, cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE)), cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE))));
+			// only add it if the name matches
+			if (cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)).equals(name)) {
+				list.add(new LocationPair(counter, cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE)), cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE))));
+			}
 			while (cursor.moveToNext()) {
-				counter++;
-				list.add(new LocationPair(0, cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE)), cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE))));
+				if (cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)).equals(name)) {
+					counter++;
+					list.add(new LocationPair(0, cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE)), cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE))));
+				}
 			}
 		}
 		cursor.close();
-
-
 	}
+	
 	public class LocationPair<number, latitude, longitude> {
 
 		private final int number;

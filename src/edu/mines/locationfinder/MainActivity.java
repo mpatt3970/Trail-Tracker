@@ -190,10 +190,11 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		TextView text = (TextView)v;
 		String selected = text.getText().toString();
 		Intent myIntent = new Intent(this, MapActivity.class);
-		myIntent.putExtra("name", selected);
+		myIntent.putExtra("name", name);
 		startActivity(myIntent);
 
 	}
+	
 
 	/** The menu displayed on a long touch. */
 	@Override
