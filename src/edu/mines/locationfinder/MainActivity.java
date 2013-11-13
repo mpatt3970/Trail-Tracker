@@ -31,12 +31,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -67,6 +67,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	private int clickCounter = 0;
 
 	private ArrayList<String> names = new ArrayList<String>();
+	private String selectedWord;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -161,13 +162,15 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 
 	@Override
 	public boolean onContextItemSelected( MenuItem item )
-	{
+	{	
 		switch( item.getItemId() )
 		{
 		case DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 			Uri uri =  LocationContentProvider.CONTENT_URI;
-			getContentResolver().delete( uri, null, null );
+			String[] select = {selectedWord};
+			Integer x = getContentResolver().delete( uri, "name = ?", select);
+			//adapter.notifyDataSetChanged();
 			fillData();
 			return true;
 		}
@@ -190,7 +193,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		TextView text = (TextView)v;
 		String selected = text.getText().toString();
 		Intent myIntent = new Intent(this, MapActivity.class);
-		myIntent.putExtra("name", name);
+		myIntent.putExtra("name", selected);
 		startActivity(myIntent);
 
 	}
@@ -201,6 +204,8 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo )
 	{
 		super.onCreateContextMenu( menu, v, menuInfo );
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		selectedWord = ((TextView) info.targetView).getText().toString();
 		menu.add( 0, DELETE_ID, 0, R.string.delete );
 	}
 
