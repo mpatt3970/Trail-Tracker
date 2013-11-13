@@ -1,6 +1,6 @@
 package edu.mines.trailTracker;
 
-import edu.mines.locationfinder.R;
+import edu.mines.trailTracker.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

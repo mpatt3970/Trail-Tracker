@@ -40,7 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import edu.mines.locationfinder.R;
+import edu.mines.trailTracker.R;
 
 public class MainActivity extends ListActivity {
 
@@ -171,7 +171,8 @@ public class MainActivity extends ListActivity {
 			Uri uri =  LocationContentProvider.CONTENT_URI;
 			String[] select = {selectedWord};
 			Integer x = getContentResolver().delete( uri, "name = ?", select);
-			
+			adapter.notifyDataSetChanged();
+			adapter.clear();
 			fillData();
 			adapter.remove(selectedWord);
 			return super.onContextItemSelected( item );
