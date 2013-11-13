@@ -43,7 +43,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class MainActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends ListActivity {
 
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final String DEFAULT_NAME = "Some Trail";
@@ -52,7 +52,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
 
 
-	private SimpleCursorAdapter adapter;
+	private ArrayAdapter<String> adapter;
 
 	private TextView emptyList;
 	private ListView list;
@@ -79,7 +79,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		registerForContextMenu( getListView() );
 
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
 		setListAdapter(adapter);
 
 
@@ -136,7 +136,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		} 
 		cursor.close();
 	}
-
+/*
 	// creates a new loader after the initLoader () call
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -158,7 +158,7 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 		// data is not available anymore, delete reference
 		adapter.swapCursor(null);
 	}
-
+*/
 
 	@Override
 	public boolean onContextItemSelected( MenuItem item )
@@ -170,9 +170,10 @@ public class MainActivity extends ListActivity implements LoaderManager.LoaderCa
 			Uri uri =  LocationContentProvider.CONTENT_URI;
 			String[] select = {selectedWord};
 			Integer x = getContentResolver().delete( uri, "name = ?", select);
-			//adapter.notifyDataSetChanged();
+			
 			fillData();
-			return true;
+			adapter.remove(selectedWord);
+			return super.onContextItemSelected( item );
 		}
 		return super.onContextItemSelected( item );
 	}
