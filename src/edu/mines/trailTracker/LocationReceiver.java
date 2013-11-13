@@ -1,4 +1,4 @@
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;

@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.mines.locationfinder.MainActivity"
+            android:name="edu.mines.trailTracker.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,41 +40,41 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.RecordTrail"
-            android:parentActivityName="edu.mines.locationfinder.EnterName" >
+            android:name="edu.mines.trailTracker.RecordTrail"
+            android:parentActivityName="edu.mines.trailTracker.EnterName" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.locationfinder.EnterName" />
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.MapActivity"
-            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
+            android:name="edu.mines.trailTracker.MapActivity"
+            android:parentActivityName="edu.mines.trailTracker.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.locationfinder.MainActivity" />
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.DetailActivity"
-            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
+            android:name="edu.mines.trailTracker.DetailActivity"
+            android:parentActivityName="edu.mines.trailTracker.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.locationfinder.MainActivity" />
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.EnterName"
-            android:parentActivityName="edu.mines.locationfinder.MainActivity" >
+            android:name="edu.mines.trailTracker.EnterName"
+            android:parentActivityName="edu.mines.trailTracker.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.locationfinder.MainActivity" />
         </activity>
 
         <provider
-            android:name="edu.mines.locationfinder.LocationContentProvider"
+            android:name="edu.mines.trailTracker.LocationContentProvider"
             android:authorities="edu.mines.locationfinder.contentprovider"
             android:exported="false" >
         </provider>
 
-        <receiver android:name="edu.mines.locationfinder.LocationReceiver" >
+        <receiver android:name="edu.mines.trailTracker.LocationReceiver" >
             <intent-filter>
                 <action android:name="edu.mines.locationfinder.LOCATION_READY" />
 
@@ -90,19 +90,19 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="edu.mines.locationfinder.EditName"
+            android:name="edu.mines.trailTracker.EditName"
             android:label="@string/title_activity_edit_name" >
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.Settings"
+            android:name="edu.mines.trailTracker.Settings"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.Help"
+            android:name="edu.mines.trailTracker.Help"
             android:label="@string/title_activity_help" >
         </activity>
         <activity
-            android:name="edu.mines.locationfinder.About"
+            android:name="edu.mines.trailTracker.About"
             android:label="@string/title_activity_about" >
         </activity>
     </application>

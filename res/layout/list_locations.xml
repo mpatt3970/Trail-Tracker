@@ -11,13 +11,18 @@
         android:text="@string/list"
         android:textSize="24sp" />
 
-    <ListView
-        android:id="@android:id/list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="20sp" >
-    </ListView>
+        android:layout_height="wrap_content" >
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp" >
+        </ListView>
+    </ScrollView>
 
     <TextView
         android:id="@+id/empty"
@@ -26,4 +31,5 @@
         android:layout_gravity="center"
         android:text="@string/empty"
         android:textSize="20sp" />
+
 </LinearLayout>

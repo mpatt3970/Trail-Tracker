@@ -1,6 +1,8 @@
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
 import java.util.ArrayList;
+
+import edu.mines.locationfinder.R;
 
 import android.app.Activity;
 import android.content.Intent;

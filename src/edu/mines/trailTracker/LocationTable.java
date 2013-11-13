@@ -5,7 +5,7 @@
  * @authors Michael Patterson, Thomas Powell
  */
 
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
 import android.database.sqlite.SQLiteDatabase;
 

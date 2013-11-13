@@ -17,9 +17,11 @@
  * We agreed to an even 50-50 split of points, which is most fair and most reflective of how work was split
  */
 
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
 import java.util.ArrayList;
+
+import edu.mines.locationfinder.R;
 
 import android.app.ListActivity;
 import android.app.LoaderManager;

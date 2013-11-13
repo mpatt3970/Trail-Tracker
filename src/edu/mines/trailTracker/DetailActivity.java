@@ -1,5 +1,6 @@
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
+import edu.mines.locationfinder.R;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;

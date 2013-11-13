@@ -1,4 +1,4 @@
-package edu.mines.locationfinder;
+package edu.mines.trailTracker;
 
 import java.util.ArrayList;
 
@@ -14,6 +14,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import edu.mines.locationfinder.R;
 
 public class MapActivity extends Activity {
 	
