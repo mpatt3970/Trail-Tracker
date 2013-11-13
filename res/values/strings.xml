@@ -10,7 +10,7 @@
     <string name="enter">Enter the Trail Name</string>
     <string name="list">My Trails</string>
     <string name="save">Save this Trail</string>
-    <string name="empty">You have no saved trail</string>
+    <string name="empty">You have no saved trails</string>
     <string name="db_item">This is a database item</string>
     <string name="delete">Delete?</string>
     <string name="action_search">Search</string>

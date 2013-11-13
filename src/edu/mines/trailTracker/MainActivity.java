@@ -21,18 +21,14 @@ package edu.mines.trailTracker;
 
 import java.util.ArrayList;
 
-import edu.mines.locationfinder.R;
-
 import android.app.ListActivity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -41,9 +37,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import edu.mines.locationfinder.R;
 
 public class MainActivity extends ListActivity {
 
@@ -76,6 +73,8 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.list_locations);
 
+		emptyList = (TextView)findViewById(R.id.empty);
+		
 		setList((ListView)findViewById(android.R.id.list));
 		fillData();
 		registerForContextMenu( getListView() );
@@ -83,7 +82,6 @@ public class MainActivity extends ListActivity {
 
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
 		setListAdapter(adapter);
-
 
 	}
 
@@ -135,7 +133,8 @@ public class MainActivity extends ListActivity {
 					names.add(nextName);
 				}
 			}
-		} 
+			((LinearLayout)emptyList.getParent()).removeView(emptyList);
+		}
 		cursor.close();
 	}
 /*
