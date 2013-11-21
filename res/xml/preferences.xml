@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListPreference
+        android:defaultValue="3000"
+        android:entries="@array/updateAccuracy"
+        android:entryValues="@array/updateAccuracyValues"
+        android:key="accuracy"
+        android:summary="@string/accuracy_description"
+        android:title="@string/accuracy" />
+
+</PreferenceScreen>
