@@ -1,9 +1,10 @@
 package mines.edu.activities;
 
+
 import mines.edu.database.LocationContentProvider;
+import mines.edu.database.LocationObject;
 import mines.edu.database.LocationTable;
-import mines.edu.fragments.MyMapFragment;
-import android.content.BroadcastReceiver;
+import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.widget.Toast;
 
-public class LocationReceiver extends BroadcastReceiver {
+public class NewLocationService extends IntentService {
+
 	//sets a decimal format
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
 
@@ -21,34 +22,25 @@ public class LocationReceiver extends BroadcastReceiver {
 	private String latitude;
 	private String longitude;
 	private String timeStr;
-	private MyMapFragment mapFrag;
 
-	
+	public NewLocationService() {
+		super("mines.edu.patterson_powell_trailtracker.new_location");
+	}
+
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.d("yo", "received");
-		//Do this when the system sends the intent
+	protected void onHandleIntent(Intent intent) {
 		Bundle b = intent.getExtras();
-		Location location;
-		//if (b.containsKey("location")) {
-		//	location = (Location)b.get("location");
-		//} else {
-			location = (Location)b.get(android.location.LocationManager.KEY_LOCATION_CHANGED);
-		//}
 		name = b.getString("name");
+		Location location = (Location)b.get(android.location.LocationManager.KEY_LOCATION_CHANGED);
 		if (location != null) {
 			Time now = new Time();
 			now.setToNow();
-			timeStr = now.toString();
-			latitude = df.format( location.getLatitude() );
-			longitude = df.format( location.getLongitude() );
-			String received = "New location added at " + latitude + ", " + longitude;
-			Toast.makeText(context, received, Toast.LENGTH_SHORT).show();
-			saveNewLocation(context);
-			
-			Intent broadcast = new Intent();
-			intent.setAction("NEW_LOCATION");
-			context.sendBroadcast(broadcast);
+			timeStr = now.format2445();
+			latitude = df.format(location.getLatitude());
+			longitude = df.format(location.getLongitude());
+			saveNewLocation(this);
+			updateList();
+			Log.d("location", "Latitude is " + latitude + ", longitude is " + longitude);
 		}
 	}
 
@@ -63,4 +55,15 @@ public class LocationReceiver extends BroadcastReceiver {
 		// store the values in the database
 		context.getContentResolver().insert(LocationContentProvider.CONTENT_URI, values);
 	}
+	
+	public void updateList() {
+		// fire a broadcast to trailactivity to update its list.
+		// which will trigger maps and stats to update with its own broadcast
+		Intent broadcast = new Intent();
+		broadcast.setAction("NEW_LOCATION");
+		sendBroadcast(broadcast);
+	}
+	
+	
+
 }

@@ -2,15 +2,14 @@ package mines.edu.fragments;
 
 import java.util.ArrayList;
 
-import mines.edu.database.LocationContentProvider;
-import mines.edu.database.LocationTable;
+import mines.edu.activities.TrailActivity;
+import mines.edu.database.LocationObject;
 import mines.edu.patterson_powell_trailtracker.R;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,14 +34,11 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MyMapFragment extends Fragment {
 
-	private static final int DEFAULT_ZOOM = 16;
 
-
-	private LocationManager locationManager;
 	private MapView mapView;
 	private GoogleMap map;
 	private String name;
-	private ArrayList<LatLng> list;
+	private ArrayList<LocationObject> list;
 
 
 
@@ -63,10 +58,10 @@ public class MyMapFragment extends Fragment {
 		} catch (GooglePlayServicesNotAvailableException e) {
 			e.printStackTrace();
 		}
-
+		
 		// create a receiver for new updates
 
-		IntentFilter filter = new IntentFilter("NEW_LOCATION");
+		IntentFilter filter = new IntentFilter("UPDATE");
 		getActivity().getApplicationContext().registerReceiver(receiver, filter);
 	
 
@@ -74,23 +69,22 @@ public class MyMapFragment extends Fragment {
 
 
 	}
-
+	
 	public void update(String n) {
+		// only here to not break display and record activities
+	}
+
+	public void update() {
 		map.clear();
-		list = new ArrayList<LatLng>();
-		name = n;
-		getLocations(getActivity());
+		list = ((TrailActivity) getActivity()).getList();
 		drawLines();
-		moveToStart();
+		moveToRecent();
 	}
 
 
-	public void moveToStart() {
-		// move to the most recent location
-		Integer index = list.size() - 1;
-		if (index >= 0) {
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(list.get(index), DEFAULT_ZOOM));
-		}
+	public void moveToRecent() {
+		// we might figure out zooming in right here
+		map.moveCamera(CameraUpdateFactory.newLatLng(list.get(list.size() - 1).getLatLng()));
 	}
 
 	public void drawLines() {
@@ -98,42 +92,19 @@ public class MyMapFragment extends Fragment {
 		if (list.size() > 1) {
 			LatLng begin = null;
 			LatLng end = null;
-			for(LatLng l: list) {
+			for(LocationObject locale : list) {
 				if(first) {
-					end = l;
+					begin = locale.getLatLng();
 					first = false;
 				} else {
-					begin = end;
-					end = l;
+					end = begin;
+					begin = locale.getLatLng();
 					map.addPolyline(new PolylineOptions().add(begin, end).width(5).color(Color.RED));
 				}
 			}
 		} else if (list.size() > 0) {
-			map.addMarker(new MarkerOptions().position(list.get(0)));
+			map.addMarker(new MarkerOptions().position(list.get(0).getLatLng()));
 		}
-	}
-
-	public void getLocations(Context context) {
-		/**
-		 * This function gets the list of locations
-		 *
-		 */
-		// open a cursor, get an array of previous names and lats and lons
-		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE, LocationTable.COLUMN_NAME };
-		Cursor cursor = context.getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
-		if ((cursor != null) && (cursor.getCount() > 0)) {
-			cursor.moveToFirst();
-			// only add it if the name matches
-			if (cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)).equals(name)) {
-				list.add(new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE)))));
-			}
-			while (cursor.moveToNext()) {
-				if (cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_NAME)).equals(name)) {
-					list.add(new LatLng(Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LATITUDE))), Double.parseDouble(cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.COLUMN_LONGITUDE)))));
-				}
-			}
-		}
-		cursor.close();
 	}
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -141,8 +112,7 @@ public class MyMapFragment extends Fragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// re update the map
-			update(name);
-
+			update();
 		}
 
 	};

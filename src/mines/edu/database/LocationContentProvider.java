@@ -183,7 +183,7 @@ public class LocationContentProvider extends ContentProvider {
 	private void checkColumns(String[] projection) {
 		String[] available = { LocationTable.COLUMN_NAME,
 		        LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE,
-		        LocationTable.COLUMN_ID };
+		        LocationTable.COLUMN_ID, LocationTable.COLUMN_PHOTO, LocationTable.COLUMN_TIME };
 		    if (projection != null) {
 		      HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 		      HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));

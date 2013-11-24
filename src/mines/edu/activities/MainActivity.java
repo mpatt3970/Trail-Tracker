@@ -51,7 +51,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 		list = (ListView)findViewById(android.R.id.list);
 		registerForContextMenu(list);
 
-		// If there isn't google play, tell them to get them
+		// If there isn't google play, tell the user that the app won't work properly
 		int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if(status != ConnectionResult.SUCCESS) {
 			showMessage(getResources().getString(R.string.getGooglePlay));
@@ -123,8 +123,9 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 		// pass the selected name to the DisplayActivity
 		TextView text = (TextView)v;
 		selectedWord = text.getText().toString();
-		Intent myIntent = new Intent(this, DisplayActivity.class);
+		Intent myIntent = new Intent(this, TrailActivity.class);
 		myIntent.putExtra("name", selectedWord);
+		myIntent.putExtra("new_trail", false);
 		startActivity(myIntent);
 	}
 
@@ -229,7 +230,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 
-	//Callback Methods for fragments
+	// Callback Methods for fragments
 	@Override
 	public void onInputCancel(int dialogID) {
 		Log.d( "DIALOG_DEMO", "No input received from input dialog with id = " + dialogID );
@@ -248,9 +249,10 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 			reEnter.setArguments(args);
 			reEnter.show(getFragmentManager(), "AlertNotUniqueFragment");
 		} else {
-			Intent record = new Intent(this, RecordActivity.class);
-			record.putExtra("name", input);
-			startActivity(record);
+			Intent trail = new Intent(this, TrailActivity.class);
+			trail.putExtra("name", input);
+			trail.putExtra("new_trail", true);
+			startActivity(trail);
 		}
 	}
 

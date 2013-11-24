@@ -114,6 +114,8 @@ public class RecordActivity extends Activity {
 		updateLocation();
 	}
 	
+	
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();

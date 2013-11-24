@@ -15,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap;
 public class DisplayActivity extends Activity {
 
 	private String name;
-	private GoogleMap map;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
