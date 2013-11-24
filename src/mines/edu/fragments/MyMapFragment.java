@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import mines.edu.database.LocationContentProvider;
 import mines.edu.database.LocationTable;
 import mines.edu.patterson_powell_trailtracker.R;
+
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,11 +15,9 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,7 +53,8 @@ public class MyMapFragment extends Fragment {
 		View v = inflater.inflate(R.layout.map_fragment, container, false);
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-
+		
+		map.setMyLocationEnabled(true);
 
 
 		// Needs to call MapsInitializer before doing any CameraUpdateFactory calls
@@ -71,8 +71,6 @@ public class MyMapFragment extends Fragment {
 	
 
 		return v;
-
-
 	}
 
 	public void update(String n) {
@@ -111,6 +109,9 @@ public class MyMapFragment extends Fragment {
 		} else if (list.size() > 0) {
 			map.addMarker(new MarkerOptions().position(list.get(0)));
 		}
+		/*if(list.size() > 0) {
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(list.get(list.size() - 1), 16));
+		}*/
 	}
 
 	public void getLocations(Context context) {
