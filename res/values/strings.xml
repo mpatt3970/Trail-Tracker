@@ -26,6 +26,7 @@
     <string name="accuracy">Accuracy</string>
     <string name="accuracy_description">Adjust the frequency of location updates, less frequent = better battery life. </string>
     <string name="getGooglePlay">To get the most out of this app and prevent crashes, get GooglePlay Services before continuing.</string>
+
     <string name="help_text">This will be the help message</string>
     <string name="about_text">This will be the about message</string>
     <string name="title_activity_trail">TrailActivity</string>

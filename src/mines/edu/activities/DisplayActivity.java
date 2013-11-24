@@ -37,19 +37,18 @@ public class DisplayActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection for action bar
-		switch (item.getItemId()) {
-		case R.id.action_settings:
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_settings) {
 			Intent settings = new Intent(this, SettingsActivity.class);
 			startActivity(settings);
 			return super.onOptionsItemSelected(item);
-        case R.id.action_help:
-        	showMessage(getResources().getString(R.string.help_text));
+		} else if (itemId == R.id.action_help) {
+			showMessage(getResources().getString(R.string.help_text));
 			return super.onOptionsItemSelected(item);
-        case R.id.action_about:
-        	showMessage(getResources().getString(R.string.about_text));
+		} else if (itemId == R.id.action_about) {
+			showMessage(getResources().getString(R.string.about_text));
 			return super.onOptionsItemSelected(item);
-		default:
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}

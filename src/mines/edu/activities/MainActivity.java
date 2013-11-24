@@ -67,23 +67,22 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection for action bar
-		switch (item.getItemId()) {
-		case R.id.action_new:
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_new) {
 			// open the name fragment, passing it false for edit
 			startNew();
 			return super.onOptionsItemSelected(item);
-		case R.id.action_settings:
+		} else if (itemId == R.id.action_settings) {
 			Intent settings = new Intent(this, SettingsActivity.class);
 			startActivity(settings);
 			return super.onOptionsItemSelected(item);
-		case R.id.action_help:
+		} else if (itemId == R.id.action_help) {
 			showMessage(getResources().getString(R.string.help_text));
 			return super.onOptionsItemSelected(item);
-		case R.id.action_about:
+		} else if (itemId == R.id.action_about) {
 			showMessage(getResources().getString(R.string.about_text));
 			return super.onOptionsItemSelected(item);
-		default:
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
