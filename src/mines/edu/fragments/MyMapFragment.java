@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 public class MyMapFragment extends Fragment {
 
 
+	private static int DEFAULT_ZOOM = 16;
+	
 	private MapView mapView;
 	private GoogleMap map;
 	private String name;
@@ -60,6 +63,8 @@ public class MyMapFragment extends Fragment {
 			e.printStackTrace();
 		}
 		
+		map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
+		
 		// create a receiver for new updates
 
 		IntentFilter filter = new IntentFilter("UPDATE");
@@ -83,6 +88,7 @@ public class MyMapFragment extends Fragment {
 
 	public void moveToRecent() {
 		// we might figure out zooming in right here
+		// not a null pointer cause this is called after at least one item is added
 		map.moveCamera(CameraUpdateFactory.newLatLng(list.get(list.size() - 1).getLatLng()));
 	}
 
@@ -92,6 +98,10 @@ public class MyMapFragment extends Fragment {
 			LatLng begin = null;
 			LatLng end = null;
 			for(LocationObject locale : list) {
+				if (locale.getPicture().length > 0) {
+					map.addMarker(new MarkerOptions().position(locale.getLatLng())
+							.title(getTime(parseStringForTime(locale.getTime()))));
+				}
 				if(first) {
 					begin = locale.getLatLng();
 					first = false;
@@ -104,9 +114,6 @@ public class MyMapFragment extends Fragment {
 		} else if (list.size() > 0) {
 			map.addMarker(new MarkerOptions().position(list.get(0).getLatLng()));
 		}
-		/*if(list.size() > 0) {
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(list.get(list.size() - 1), 16));
-		}*/
 	}
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -118,6 +125,24 @@ public class MyMapFragment extends Fragment {
 		}
 
 	};
+	
+	public Time parseStringForTime(String time) {
+		// I don't know why the provided functions won't work for this
+		// Assume format is YYYYMMDDTHHMMSS
+		Time parsed = new Time();
+		int seconds = Integer.parseInt(time.substring(13, 15));
+		int minutes = Integer.parseInt(time.substring(11, 13));
+		int hours = Integer.parseInt(time.substring(9, 11));
+		int day = Integer.parseInt(time.substring(6, 8));
+		int month = Integer.parseInt(time.substring(4, 6));
+		int year = Integer.parseInt(time.substring(0, 4));
+		parsed.set(seconds, minutes, hours, day, month, year);
+		return parsed;
+	}
+	
+	public String getTime(Time time) {
+		return time.hour + ":" + time.minute + ":" + time.second;
+	}
 
 
 	public void onDestroyView() {

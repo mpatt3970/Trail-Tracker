@@ -40,7 +40,6 @@ public class NewLocationService extends IntentService {
 			longitude = df.format(location.getLongitude());
 			saveNewLocation(this);
 			updateList();
-			Log.d("location", "Latitude is " + latitude + ", longitude is " + longitude);
 		}
 	}
 
@@ -51,11 +50,11 @@ public class NewLocationService extends IntentService {
 		values.put(LocationTable.COLUMN_LATITUDE, latitude);
 		values.put(LocationTable.COLUMN_LONGITUDE, longitude);
 		values.put(LocationTable.COLUMN_TIME, timeStr);
-		values.put(LocationTable.COLUMN_PHOTO, "");
+		values.put(LocationTable.COLUMN_PHOTO, new byte[0]);
 		// store the values in the database
 		context.getContentResolver().insert(LocationContentProvider.CONTENT_URI, values);
 	}
-	
+
 	public void updateList() {
 		// fire a broadcast to trailactivity to update its list.
 		// which will trigger maps and stats to update with its own broadcast
@@ -63,7 +62,7 @@ public class NewLocationService extends IntentService {
 		broadcast.setAction("NEW_LOCATION");
 		sendBroadcast(broadcast);
 	}
-	
-	
+
+
 
 }

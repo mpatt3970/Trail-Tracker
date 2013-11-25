@@ -1,17 +1,21 @@
 package mines.edu.database;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationObject {
 	private String name, latitude, longitude, time;
+	private byte[] picture;
 	
-	public LocationObject(String n, String lat, String lon, String t) {
+	public LocationObject(String n, String lat, String lon, String t, byte[] pic) {
 		this.name = n;
 		this.latitude = lat;
 		this.longitude = lon;
 		this.time = t;
+		this.picture = pic;
 	}
 
 	public String getName() {
@@ -28,6 +32,14 @@ public class LocationObject {
 
 	public String getTime() {
 		return time;
+	}
+	
+	public byte[] getPicture() {
+		return picture;
+	}
+	
+	public Bitmap getDecodedPicture() {
+		return BitmapFactory.decodeByteArray(picture, 0, picture.length);
 	}
 	
 	public LatLng getLatLng() {

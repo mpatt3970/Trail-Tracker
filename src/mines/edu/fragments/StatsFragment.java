@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 public class StatsFragment extends Fragment {
 	
+	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.00" );
+	
 	private static int MILLIS_DAY = 86400000;
 	private static int MILLIS_HOUR = 3600000;
 	private static int MILLIS_MINUTE = 60000;
@@ -69,7 +71,7 @@ public class StatsFragment extends Fragment {
 				distance += begin.distanceTo(end); // in meters
 			}
 		}
-		speed = 0;
+		speed = distance/totalTime*1000;
 	}
 	
 	public void updateViews() {
@@ -77,9 +79,9 @@ public class StatsFragment extends Fragment {
 		timeView = (TextView) getView().findViewById(R.id.time);
 		speedView = (TextView) getView().findViewById(R.id.speed);
 		// setText on the text views to reflect the calculations
-		totalView.setText("Distance: " + distance +  " meters, Duration: " + timeFromMillis(totalTime));
+		totalView.setText("Distance: " + df.format(distance) +  " meters, Duration: " + timeFromMillis(totalTime));
 		timeView.setText("Date: " + getDate() + ", Started At: " + getTime(timeStart) + ", Ended At: " + getTime(timeEnd))   ;
-		speedView.setText("Average Speed: " + speed);
+		speedView.setText("Average Speed: " + df.format(speed) + "meters/seconds");
 		
 	}
 	
