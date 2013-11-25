@@ -18,4 +18,18 @@
         <item name="20000">20000</item>
         <item name="40000">40000</item>
     </string-array>
+    
+    <string-array name="map_types">
+        <item name="normal">Street View</item>
+        <item name="hybrid">Hybrid View</item>
+        <item name="satellite">Satellite View</item>
+        <item name="terrain">Terrain View</item>
+    </string-array>
+    
+    <string-array name="map_types_values">
+        <item name="normal">0</item>
+        <item name="hybrid">1</item>
+        <item name="satellite">2</item>
+        <item name="terrain">3</item>
+    </string-array>
 </resources>

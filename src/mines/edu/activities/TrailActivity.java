@@ -70,7 +70,7 @@ public class TrailActivity extends Activity {
 			// get the preference for frequency from the "accuracy" setting
 			// a little misleading since the hardware gets the final say in how frequently locations can be polled
 			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-			String settingStr = sharedPrefs.getString("accuracy", "5000");
+			String settingStr = sharedPrefs.getString("accuracy", "10000");
 			minTime = Integer.parseInt(settingStr);
 			// get the location manager
 			this.manager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
@@ -125,22 +125,29 @@ public class TrailActivity extends Activity {
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				thumbnail.compress(Bitmap.CompressFormat.PNG, 100, bos);
 				picBitMap = bos.toByteArray();
-				// save it to be retrieved when the next location is located
+				// get the most recent location to start
 				Location recent = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				Time now = new Time();
-				now.setToNow();
-				String timeStr = now.format2445();
-				String latitude = df.format(recent.getLatitude());
-				String longitude = df.format(recent.getLongitude());
-				ContentValues values = new ContentValues();
-				values.put(LocationTable.COLUMN_NAME, name);
-				values.put(LocationTable.COLUMN_LATITUDE, latitude);
-				values.put(LocationTable.COLUMN_LONGITUDE, longitude);
-				values.put(LocationTable.COLUMN_TIME, timeStr);
-				values.put(LocationTable.COLUMN_PHOTO, picBitMap);
-				// store the values in the database
-				getContentResolver().insert(LocationContentProvider.CONTENT_URI, values);
-				updateFragments();
+				if (recent == null) {
+					recent = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); // try getting from another provider
+				} if (recent != null) {
+					// if a location is valid, then save it in the db
+					Time now = new Time();
+					now.setToNow();
+					String timeStr = now.format2445();
+					String latitude = df.format(recent.getLatitude());
+					String longitude = df.format(recent.getLongitude());
+					ContentValues values = new ContentValues();
+					values.put(LocationTable.COLUMN_NAME, name);
+					values.put(LocationTable.COLUMN_LATITUDE, latitude);
+					values.put(LocationTable.COLUMN_LONGITUDE, longitude);
+					values.put(LocationTable.COLUMN_TIME, timeStr);
+					values.put(LocationTable.COLUMN_PHOTO, picBitMap);
+					// store the values in the database
+					getContentResolver().insert(LocationContentProvider.CONTENT_URI, values);
+					updateFragments();
+				} else {
+					showMessage("Failed to connect a connection with the image. Try moving and taking a new image");
+				}
 			}
 		}
 	}
@@ -171,6 +178,9 @@ public class TrailActivity extends Activity {
 		// general cleanup
 		updating = false;
 		invalidateOptionsMenu(); // update the action bar
+		// make sure the intents are initialiazed before removing updates
+		service = new Intent(this, NewLocationService.class);
+		newLocationIntent = PendingIntent.getService(this, 0, service, PendingIntent.FLAG_CANCEL_CURRENT);
 		manager.removeUpdates(newLocationIntent);
 		unregisterReceiver(receiver);
 	}
@@ -239,7 +249,7 @@ public class TrailActivity extends Activity {
 		}
 	}
 
-	
+
 	public ArrayList<LocationObject> getList() {
 		// a getter for the list so the fragments can access it
 		return list;

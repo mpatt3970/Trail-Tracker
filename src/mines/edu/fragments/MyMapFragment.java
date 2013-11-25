@@ -17,15 +17,17 @@ import mines.edu.activities.ImageActivity;
 import mines.edu.activities.TrailActivity;
 import mines.edu.database.LocationObject;
 import mines.edu.patterson_powell_trailtracker.R;
-
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +89,23 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 	}
 
 	public void update() {
-		// clear the map, get the most recent list of location objects, draw on and move the map
+		map.clear();
+		// get the current setting for map type
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		int setting = Integer.parseInt(sharedPrefs.getString("mapType", "0"));
+		if (setting == 1) {
+			// corresponds to hybrid map
+			map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+		} else if (setting == 2) {
+			// corresponds to satellite map
+			map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+		} else if (setting == 3) {
+			map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+		} else {
+			// either they chose normal or it's broken, either way set to normal
+			map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		}
+		// get the most recent list of location objects, draw on and move the map
 		map.clear();
 		list = ((TrailActivity) getActivity()).getList();
 		drawLines();
