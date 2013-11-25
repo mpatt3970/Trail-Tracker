@@ -6,9 +6,9 @@ import mines.edu.database.LocationContentProvider;
 import mines.edu.database.LocationTable;
 import mines.edu.fragments.MessageFragment;
 import mines.edu.fragments.NameFragment;
-import mines.edu.fragments.ReEnterNameFragment;
 import mines.edu.patterson_powell_trailtracker.R;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -238,21 +237,30 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	@Override
 	public void onInputDone(int dialogID, String input, boolean edit) {
 		// first check the name against all names, this will ensure it is unique and prevent conflicts in the db
-		boolean unique = checkName(input);
-		// if it isn't unique, display an alertdialog and start an editable namefragment with the previous attempt
-		if (!unique) {
-			selectedWord = input;
-			Bundle args = new Bundle();
-			args.putString("message", getResources().getString(R.string.not_unique));
-			ReEnterNameFragment reEnter = new ReEnterNameFragment();
-			reEnter.setArguments(args);
-			reEnter.show(getFragmentManager(), "AlertNotUniqueFragment");
+		if(edit) {
+			changeName(input);
 		} else {
 			Intent trail = new Intent(this, TrailActivity.class);
 			trail.putExtra("name", input);
 			trail.putExtra("new_trail", true);
 			startActivity(trail);
 		}
+	}
+
+	private void changeName(String newName) {
+		Uri uri =  LocationContentProvider.CONTENT_URI;
+		String[] select = {selectedWord};
+		ContentValues cv = new ContentValues();
+		cv.put("name", newName);
+		getContentResolver().update(uri, cv, "name = ?", select);
+		//adapter.remove(selectedWord);
+		//adapter.add(newName);
+		//adapter.notifyDataSetInvalidated();
+		//adapter.notifyDataSetChanged();
+		fillData();
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_selectable_list_item, names);
+		setListAdapter(adapter);
+		
 	}
 
 	@Override

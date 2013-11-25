@@ -2,6 +2,7 @@ package mines.edu.fragments;
 
 
 
+import mines.edu.activities.MainActivity;
 import mines.edu.patterson_powell_trailtracker.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 // Thank you to DialogFragmentDemo
@@ -71,7 +73,17 @@ public class NameFragment extends DialogFragment {
 		.setPositiveButton(confirm,
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				((NameFragment.Listener)getActivity()).onInputDone(dialogID, input.getText().toString(), edit);
+				if(((MainActivity)getActivity()).checkName(input.getText().toString())) {
+					((NameFragment.Listener)getActivity()).onInputDone(dialogID, input.getText().toString(), edit);
+				} else {
+					((MainActivity)getActivity()).showMessage("Name is the same as another Trail. Please enter a unique name.");
+					
+					/*getActivity().runOnUiThread(new Runnable() {
+				        @Override
+				        public void run() {
+				            Toast.makeText(getActivity(), "Name is the same as another Trail. Please enter a unique name.", Toast.LENGTH_SHORT).show();
+				        }
+				    });*/				}
 			}
 		}
 				)
