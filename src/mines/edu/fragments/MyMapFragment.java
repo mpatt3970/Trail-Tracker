@@ -1,7 +1,10 @@
 package mines.edu.fragments;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
+import mines.edu.activities.ImageActivity;
 import mines.edu.activities.TrailActivity;
 import mines.edu.database.LocationObject;
 import mines.edu.patterson_powell_trailtracker.R;
@@ -11,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,14 +22,20 @@ import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -33,15 +43,16 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 
 
-public class MyMapFragment extends Fragment {
+public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 
 
 	private static int DEFAULT_ZOOM = 16;
-	
+
 	private MapView mapView;
 	private GoogleMap map;
 	private String name;
-	private ArrayList<LocationObject> list;
+	private ArrayList<LocationObject> list; // holds all relevant points from db
+	private Map<String, LocationObject> whichImage;
 
 
 
@@ -52,7 +63,7 @@ public class MyMapFragment extends Fragment {
 		View v = inflater.inflate(R.layout.map_fragment, container, false);
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-		
+
 		map.setMyLocationEnabled(true);
 
 
@@ -62,18 +73,20 @@ public class MyMapFragment extends Fragment {
 		} catch (GooglePlayServicesNotAvailableException e) {
 			e.printStackTrace();
 		}
-		
+
 		map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
-		
+
+		map.setInfoWindowAdapter(this);
+		map.setOnInfoWindowClickListener(new ImageListener());
 		// create a receiver for new updates
 
 		IntentFilter filter = new IntentFilter("UPDATE");
 		getActivity().getApplicationContext().registerReceiver(receiver, filter);
-	
+
 
 		return v;
 	}
-	
+
 	public void update(String n) {
 		// only here to not break display and record activities
 	}
@@ -93,14 +106,17 @@ public class MyMapFragment extends Fragment {
 	}
 
 	public void drawLines() {
+		whichImage = new TreeMap<String, LocationObject>();
+		Integer counter = 0; // marks the marker so the appropriate image is displayed
 		boolean first = true;
 		if (list.size() > 1) {
 			LatLng begin = null;
 			LatLng end = null;
 			for(LocationObject locale : list) {
 				if (locale.getPicture().length > 0) {
-					map.addMarker(new MarkerOptions().position(locale.getLatLng())
-							.title(getTime(parseStringForTime(locale.getTime()))));
+					whichImage.put(counter.toString(), locale);
+					map.addMarker(new MarkerOptions().position(locale.getLatLng()).title(counter.toString()));
+					counter++;
 				}
 				if(first) {
 					begin = locale.getLatLng();
@@ -125,28 +141,41 @@ public class MyMapFragment extends Fragment {
 		}
 
 	};
-	
-	public Time parseStringForTime(String time) {
-		// I don't know why the provided functions won't work for this
-		// Assume format is YYYYMMDDTHHMMSS
-		Time parsed = new Time();
-		int seconds = Integer.parseInt(time.substring(13, 15));
-		int minutes = Integer.parseInt(time.substring(11, 13));
-		int hours = Integer.parseInt(time.substring(9, 11));
-		int day = Integer.parseInt(time.substring(6, 8));
-		int month = Integer.parseInt(time.substring(4, 6));
-		int year = Integer.parseInt(time.substring(0, 4));
-		parsed.set(seconds, minutes, hours, day, month, year);
-		return parsed;
-	}
-	
-	public String getTime(Time time) {
-		return time.hour + ":" + time.minute + ":" + time.second;
-	}
-
 
 	public void onDestroyView() {
 		super.onDestroyView();
 		getActivity().getApplicationContext().unregisterReceiver(receiver);
+	}
+
+	@Override
+	public View getInfoContents(Marker arg0) {
+		// not needed
+		return null;
+	}
+
+	@Override
+	public View getInfoWindow(Marker arg0) {
+		// creates a view for clicking on a marker
+		// get the marker's title to determine correct image
+		ImageView image = new ImageView(getActivity());
+		String position = arg0.getTitle();
+		LocationObject locale = whichImage.get(position);
+		Bitmap pic = locale.getDecodedPicture();
+		image.setImageBitmap(pic);
+		return image;
+	}
+	
+	private class ImageListener implements OnInfoWindowClickListener {
+
+		@Override
+		public void onInfoWindowClick(Marker arg0) {
+			Intent intent = new Intent(getActivity(), ImageActivity.class);
+			String position = arg0.getTitle();
+			LocationObject locale = whichImage.get(position);
+			byte[] picBytes = locale.getPicture(); // has to be passed as a byte array
+			intent.putExtra("image", picBytes);
+			startActivity(intent);
+		}
+		
 	}
 }
