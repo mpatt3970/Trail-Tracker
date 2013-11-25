@@ -30,7 +30,7 @@ public class LocationTable {
 			+ COLUMN_TIME + " text not null,"
 			+ COLUMN_PHOTO + " text not null"
 			+ ");";
-	
+
 
 	public static void onCreate(SQLiteDatabase db) {
 		//onCreate execute the SQL statement to create the table

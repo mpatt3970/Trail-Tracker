@@ -26,10 +26,7 @@
     <string name="accuracy">Accuracy</string>
     <string name="accuracy_description">Adjust the frequency of location updates, less frequent = better battery life. </string>
     <string name="getGooglePlay">To get the most out of this app and prevent crashes, get GooglePlay Services before continuing.</string>
-    <string name="help_text">This will be the help message</string>
-    <string name="about_text">This will be the about message</string>
-    <string name="title_activity_trail">TrailActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_image">ImageActivity</string>
+    <string name="help_text">This app will record and plot a route on a map. From the initial screen, choose the plus sign to start recording a trail. While recording, click the camera icon to tag a photo to your current location and to the trail. To finish recording, click the save icon. To review previous hikes, choose from the list in the main screen.</string>
+    <string name="about_text">Version 1.0\nAuthors: Thomas Powell and Mike Patterson\nMobile Device Programming Project 3\nFall 2013</string>
 
 </resources>

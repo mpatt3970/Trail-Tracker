@@ -1,3 +1,9 @@
+/**
+ * Description: A very basic activity to hold the settingsFragment
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.activities;
 
 import mines.edu.fragments.SettingsFragment;

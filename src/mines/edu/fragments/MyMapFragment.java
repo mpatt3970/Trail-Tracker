@@ -1,3 +1,12 @@
+/**
+ * Description: This fragment encapsulates all the map logic for our app
+ * It handles drawing lines, marking images, showing the user's current location
+ * It also provides a custom info window to display images and start ImageActivity on a click 
+ * It updates when it receives a broadcast to do so
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.fragments;
 
 import java.util.ArrayList;
@@ -16,15 +25,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,25 +37,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-
-
-
-
 public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 
 
-	private static int DEFAULT_ZOOM = 16;
+	private static int DEFAULT_ZOOM = 16; // A default zoom value, about 5 blocks wide
 
-	private MapView mapView;
 	private GoogleMap map;
-	private String name;
 	private ArrayList<LocationObject> list; // holds all relevant points from db
 	private Map<String, LocationObject> whichImage;
 
@@ -76,10 +74,11 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 
 		map.moveCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
 
+		// create the custom info window
 		map.setInfoWindowAdapter(this);
 		map.setOnInfoWindowClickListener(new ImageListener());
+		
 		// create a receiver for new updates
-
 		IntentFilter filter = new IntentFilter("UPDATE");
 		getActivity().getApplicationContext().registerReceiver(receiver, filter);
 
@@ -87,11 +86,8 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 		return v;
 	}
 
-	public void update(String n) {
-		// only here to not break display and record activities
-	}
-
 	public void update() {
+		// clear the map, get the most recent list of location objects, draw on and move the map
 		map.clear();
 		list = ((TrailActivity) getActivity()).getList();
 		drawLines();
@@ -100,12 +96,14 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 
 
 	public void moveToRecent() {
-		// we might figure out zooming in right here
 		// not a null pointer cause this is called after at least one item is added
+		// focuses the camera on the most recent location
 		map.moveCamera(CameraUpdateFactory.newLatLng(list.get(list.size() - 1).getLatLng()));
 	}
 
 	public void drawLines() {
+		// Once there are at least two locations, start drawing lines between them
+		// if an image is at a point, add a marker with a title that corresponds to the map of locationobjects and strings		
 		whichImage = new TreeMap<String, LocationObject>();
 		Integer counter = 0; // marks the marker so the appropriate image is displayed
 		boolean first = true;
@@ -127,9 +125,11 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 					map.addPolyline(new PolylineOptions().add(begin, end).width(5).color(Color.RED));
 				}
 			}
-		} else if (list.size() > 0) {
+		} 
+		/* removed this to prevent a click crashing the app because the info window requires an image at the marker
+		 * else if (list.size() > 0) {
 			map.addMarker(new MarkerOptions().position(list.get(0).getLatLng()));
-		}
+		}*/
 	}
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -143,6 +143,7 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 	};
 
 	public void onDestroyView() {
+		// clean up the view
 		super.onDestroyView();
 		getActivity().getApplicationContext().unregisterReceiver(receiver);
 	}
@@ -166,7 +167,10 @@ public class MyMapFragment extends Fragment implements InfoWindowAdapter {
 	}
 	
 	private class ImageListener implements OnInfoWindowClickListener {
-
+		/**
+		 * This private class starts imageActivity when an info window is clicked
+		 * It passes along an intent with the byte array of the image from the info window
+		 */
 		@Override
 		public void onInfoWindowClick(Marker arg0) {
 			Intent intent = new Intent(getActivity(), ImageActivity.class);

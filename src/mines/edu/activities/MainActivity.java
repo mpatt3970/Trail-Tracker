@@ -1,3 +1,23 @@
+/**
+ * Project Overview: This project allows users to create trails by starting to record and just walking.
+ * The user can even tag photos to locations to be viewed later.
+ * We made use of the location services, google maps, content providers with sqlite, and the camera.
+ * It only works for Honeycomb or newer API's due to the content provider and MapFragment not being backwards compatible.
+ * This app was a large collaborative effort and we are quite pleased with the end result.
+ * Future improvements could include: less blurry images, tagging notes to locations or images as well, backwards compatibility..
+ * 
+ * Description: The MainActivity fills a list adapter with the unique names of hikes. Uniqueness of names is important
+ * because it allows the hike's many location points to be grouped together. This activity also allows a new hike to be created
+ * from the action bar, which also holds settings, help, and about.Additionally, the user can edit names or delete hikes from the list.
+ * 
+ * Documentation Statement: This project is our own work. We only received information
+ * through class discussion, developer.android.com, and stackoverflow.com, and online java references.
+ * Also, class demos and some tutorials at vogella.com were particularly useful..
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ * We agreed to an even 50-50 split of points, which is most fair and most reflective of how work was split
+ */
+
 package mines.edu.activities;
 
 import java.util.ArrayList;
@@ -44,6 +64,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// initialize the views and register for context(ie long clicks)
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		emptyList = (TextView)findViewById(R.id.empty);
@@ -66,6 +87,8 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// either start a new hike, show settings, or show a message of help or about
+		// depending on which action bar item is clicked
 		int itemId = item.getItemId();
 		if (itemId == R.id.action_new) {
 			// open the name fragment, passing it false for edit
@@ -87,7 +110,8 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {	
+	public boolean onContextItemSelected(MenuItem item) {
+		// on a long click, either edit or delete
 		switch(item.getItemId()) {
 		case DELETE_ID:
 			remove(selectedWord);
@@ -100,9 +124,9 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 		}
 	}
 
-	/** The menu displayed on a long touch. */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		// show a menu on a long click
 		super.onCreateContextMenu( menu, v, menuInfo );
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		selectedWord = ((TextView) info.targetView).getText().toString();
@@ -128,7 +152,8 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	private void fillData() {
-		// open a cursor, get an array of previous names
+		// open a cursor, get an array of previously saved names
+		// this array is used to fill the list adapter
 		String[] projection = { LocationTable.COLUMN_ID, LocationTable.COLUMN_NAME };
 		Cursor cursor = getContentResolver().query(LocationContentProvider.CONTENT_URI, projection, null, null, null);
 		if(cursor != null && cursor.getCount() > 0) {
@@ -184,6 +209,8 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	public void remove(String toRemove) {
+		// occurs when user chooses delete after a long click
+		// removes from db then from the listadapter
 		Uri uri =  LocationContentProvider.CONTENT_URI;
 		String[] select = {toRemove};
 		getContentResolver().delete( uri, "name = ?", select);
@@ -198,6 +225,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	public void startNew() {
+		// start a name fragment with edit value of false
 		Bundle args = new Bundle();
 		args.putInt("dialogID", NEW_TRAIL_DIALOG);
 		args.putBoolean("edit", false);
@@ -208,6 +236,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	public void startEdit() {
+		// start a name fragment with edit value of true
 		Bundle args = new Bundle();
 		args.putBoolean("edit", true);
 		args.putInt("dialogID", EDIT_NAME_DIALOG);
@@ -219,6 +248,7 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	public void showMessage(String message) {
+		// display a fragment dialog with the given string and a dismiss button
 		Bundle args = new Bundle();
 		args.putString("message", message);
 
@@ -248,23 +278,21 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 	}
 
 	private void changeName(String newName) {
+		// edits all instances of a name to a newName in the db and updates the list with the newName
 		Uri uri =  LocationContentProvider.CONTENT_URI;
 		String[] select = {selectedWord};
 		ContentValues cv = new ContentValues();
 		cv.put("name", newName);
 		getContentResolver().update(uri, cv, "name = ?", select);
-		//adapter.remove(selectedWord);
-		//adapter.add(newName);
-		//adapter.notifyDataSetInvalidated();
-		//adapter.notifyDataSetChanged();
 		fillData();
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_selectable_list_item, names);
 		setListAdapter(adapter);
-		
+
 	}
 
 	@Override
 	public void onResume() {
+		// fill the list adapter with names every time the app resumes
 		super.onStart();
 		fillData();
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_selectable_list_item, names);

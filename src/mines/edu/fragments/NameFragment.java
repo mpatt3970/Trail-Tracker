@@ -1,3 +1,15 @@
+/**
+ * Description: Relies heavily on DialogFragmentDemo
+ * Two different types of action exist. Editing or starting new
+ * Both allow the user to enter a name
+ * Both call back to onInputDone in MainActivity
+ * Where both are checked if the name is unique
+ * New provides a hint and says "start hike" on the positive button
+ * Edit provides the previous name and says "save name" on the negative button.
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.fragments;
 
 
@@ -8,11 +20,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 // Thank you to DialogFragmentDemo
@@ -22,10 +32,8 @@ public class NameFragment extends DialogFragment {
 	 * edit defines if this dialog is editing an existing name or creating a new one,
 	 * prompt is the initial text of the input field
 	 */
-	
-	public static final String PREF = "MyPrefsFile"; //filename for the shared preferences file
-	private SharedPreferences settings;
-	
+
+
 	private EditText input;
 	private int dialogID;
 	private String prompt;
@@ -77,7 +85,7 @@ public class NameFragment extends DialogFragment {
 					((NameFragment.Listener)getActivity()).onInputDone(dialogID, input.getText().toString(), edit);
 				} else {
 					((MainActivity)getActivity()).showMessage("Name is the same as another Trail. Please enter a unique name.");
-					
+
 					/*getActivity().runOnUiThread(new Runnable() {
 				        @Override
 				        public void run() {
@@ -97,10 +105,4 @@ public class NameFragment extends DialogFragment {
 						.setView(input)
 						.create();
 	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-	
 }

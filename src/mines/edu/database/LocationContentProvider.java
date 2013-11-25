@@ -147,50 +147,50 @@ public class LocationContentProvider extends ContentProvider {
 			String[] selectionArgs) {
 		//changes selected values at that URI to new values
 
-	    int uriType = sURIMatcher.match(uri);
-	    SQLiteDatabase sqlDB = database.getWritableDatabase();
-	    int rowsUpdated = 0;
-	    switch (uriType) {
-	    case LOCATIONS:
-	      rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
-	          values, 
-	          selection,
-	          selectionArgs);
-	      break;
-	    case LOCATION_ID:
-	      String id = uri.getLastPathSegment();
-	      if (TextUtils.isEmpty(selection)) {
-	        rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
-	            values,
-	            LocationTable.COLUMN_ID + "=" + id, 
-	            null);
-	      } else {
-	        rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
-	            values,
-	            LocationTable.COLUMN_ID + "=" + id 
-	            + " and " 
-	            + selection,
-	            selectionArgs);
-	      }
-	      break;
-	    default:
-	      throw new IllegalArgumentException("Unknown URI: " + uri);
-	    }
-	    getContext().getContentResolver().notifyChange(uri, null);
-	    return rowsUpdated;
+		int uriType = sURIMatcher.match(uri);
+		SQLiteDatabase sqlDB = database.getWritableDatabase();
+		int rowsUpdated = 0;
+		switch (uriType) {
+		case LOCATIONS:
+			rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
+					values, 
+					selection,
+					selectionArgs);
+			break;
+		case LOCATION_ID:
+			String id = uri.getLastPathSegment();
+			if (TextUtils.isEmpty(selection)) {
+				rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
+						values,
+						LocationTable.COLUMN_ID + "=" + id, 
+						null);
+			} else {
+				rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, 
+						values,
+						LocationTable.COLUMN_ID + "=" + id 
+						+ " and " 
+						+ selection,
+						selectionArgs);
+			}
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI: " + uri);
+		}
+		getContext().getContentResolver().notifyChange(uri, null);
+		return rowsUpdated;
 	}
 
 	private void checkColumns(String[] projection) {
 		String[] available = { LocationTable.COLUMN_NAME,
-		        LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE,
-		        LocationTable.COLUMN_ID, LocationTable.COLUMN_PHOTO, LocationTable.COLUMN_TIME };
-		    if (projection != null) {
-		      HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
-		      HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
-		      // Check if all columns which are requested are available
-		      if (!availableColumns.containsAll(requestedColumns)) {
-		        throw new IllegalArgumentException("Unknown columns in projection");
-		      }
-		    }
+				LocationTable.COLUMN_LATITUDE, LocationTable.COLUMN_LONGITUDE,
+				LocationTable.COLUMN_ID, LocationTable.COLUMN_PHOTO, LocationTable.COLUMN_TIME };
+		if (projection != null) {
+			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
+			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
+			// Check if all columns which are requested are available
+			if (!availableColumns.containsAll(requestedColumns)) {
+				throw new IllegalArgumentException("Unknown columns in projection");
+			}
+		}
 	}
 }

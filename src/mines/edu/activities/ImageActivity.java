@@ -1,3 +1,10 @@
+/**
+ * Description: This is a very basic class to display an image as the main view
+ * It receives an intent with a byte array, which holds a bitmap
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.activities;
 
 import mines.edu.patterson_powell_trailtracker.R;
@@ -13,10 +20,10 @@ public class ImageActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image);
-		
+
 		Intent intent = getIntent();
 		byte[] picture = intent.getByteArrayExtra("image");
-		
+
 		ImageView image = (ImageView) findViewById(R.id.current_image);
 		image.setImageBitmap(BitmapFactory.decodeByteArray(picture, 0, picture.length));
 	}

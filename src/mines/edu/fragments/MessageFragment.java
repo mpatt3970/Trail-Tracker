@@ -1,6 +1,11 @@
+/**
+ * Description: A basic fragment dialog to display a message provided by the intent
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.fragments;
 
-import mines.edu.activities.MainActivity;
 import mines.edu.patterson_powell_trailtracker.R;
 import android.app.AlertDialog;
 import android.app.Dialog;

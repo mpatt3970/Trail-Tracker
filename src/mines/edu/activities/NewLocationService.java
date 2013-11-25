@@ -1,8 +1,17 @@
+/**
+ * Description: This service receives pending intents with a current location
+ * Along with that location, it gets the time, and the current hike's name
+ * It bundles all these into ContentValues and saves them to the db
+ * Then it broadcasts a message to trailActivity which notifies it to update.
+ * It uses an empty byte array for the image since images are handled in TrailActivity
+ * 
+ * @authors Michael Patterson, Thomas Powell
+ */
+
 package mines.edu.activities;
 
 
 import mines.edu.database.LocationContentProvider;
-import mines.edu.database.LocationObject;
 import mines.edu.database.LocationTable;
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -11,7 +20,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.format.Time;
-import android.util.Log;
 
 public class NewLocationService extends IntentService {
 
@@ -29,6 +37,7 @@ public class NewLocationService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		// get the name, time, and location
 		Bundle b = intent.getExtras();
 		name = b.getString("name");
 		Location location = (Location)b.get(android.location.LocationManager.KEY_LOCATION_CHANGED);
