@@ -66,7 +66,7 @@
 
         <activity
             android:name="mines.edu.activities.TrailActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name="mines.edu.activities.ImageActivity"

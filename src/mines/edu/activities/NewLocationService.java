@@ -71,6 +71,11 @@ public class NewLocationService extends IntentService {
 		broadcast.setAction("NEW_LOCATION");
 		sendBroadcast(broadcast);
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
 
 
 

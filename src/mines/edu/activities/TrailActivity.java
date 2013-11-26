@@ -84,7 +84,11 @@ public class TrailActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.trail, menu);
+		if (updating) {
+			getMenuInflater().inflate(R.menu.trail, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.basic, menu);
+		}
 		return true;
 	}
 
@@ -152,16 +156,6 @@ public class TrailActivity extends Activity {
 		}
 	}
 
-
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// after it's done recording, there's no need for save or camera options
-		if (!updating) {
-			menu.removeItem(R.id.action_save);
-			menu.removeItem(R.id.action_camera);
-		}
-		return true;
-	}
-
 	public void startRecording() {
 		// begin requesting periodic location updates and send the pending intents to NewLocationService
 		service = new Intent(this, NewLocationService.class);
@@ -177,12 +171,20 @@ public class TrailActivity extends Activity {
 	public void stopRecording() {
 		// general cleanup
 		updating = false;
-		invalidateOptionsMenu(); // update the action bar
 		// make sure the intents are initialiazed before removing updates
 		service = new Intent(this, NewLocationService.class);
 		newLocationIntent = PendingIntent.getService(this, 0, service, PendingIntent.FLAG_CANCEL_CURRENT);
-		manager.removeUpdates(newLocationIntent);
-		unregisterReceiver(receiver);
+		try {
+			manager.removeUpdates(newLocationIntent);
+		} catch (NullPointerException e) {
+			// i guess updates were already removed
+		}
+		try {
+			unregisterReceiver(receiver);
+		} catch(IllegalArgumentException e) {
+			// ditto logic
+		}
+		invalidateOptionsMenu(); // re create the menu
 	}
 
 	public void getLocations() {
@@ -241,12 +243,9 @@ public class TrailActivity extends Activity {
 
 	@Override
 	public void onDestroy() {
-		// perform cleanup only if it is currently updating
-		// o.w. there's nothing to clean up
+		// perform cleanup
 		super.onDestroy();
-		if (updating) {
-			stopRecording();
-		}
+		stopRecording();
 	}
 
 
