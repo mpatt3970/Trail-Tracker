@@ -32,11 +32,15 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 public class TrailActivity extends Activity {
+
+	public static final String PREF = "MyPrefsFile"; //filename for the shared preferences file
+	SharedPreferences settings; 
 
 	private static java.text.DecimalFormat df = new java.text.DecimalFormat( "0.000000" );
 	private static final int MIN_DISTANCE = 5;
@@ -61,11 +65,15 @@ public class TrailActivity extends Activity {
 		// get the name from the intent and whether this will be recording or just displaying
 		Intent intent = getIntent();
 		name = intent.getStringExtra("name");
-		updating = intent.getBooleanExtra("new_trail", true);
 		// set the name as the text at the top
 		((TextView) findViewById(R.id.nameView)).setText(name);
 		list = new ArrayList<LocationObject>();
 
+		
+		settings = getSharedPreferences(PREF, 0);
+		if (settings.contains("updating")) {
+			updating = settings.getBoolean("updating", false);
+		}
 		if (updating) {
 			// get the preference for frequency from the "accuracy" setting
 			// a little misleading since the hardware gets the final say in how frequently locations can be polled
@@ -98,6 +106,7 @@ public class TrailActivity extends Activity {
 		// Handle item selection for action bar
 		switch (item.getItemId()) {
 		case R.id.action_save:
+			updating = false;
 			stopRecording();
 			return super.onOptionsItemSelected(item);
 		case R.id.action_camera:
@@ -170,21 +179,14 @@ public class TrailActivity extends Activity {
 
 	public void stopRecording() {
 		// general cleanup
-		updating = false;
-		// make sure the intents are initialiazed before removing updates
-		service = new Intent(this, NewLocationService.class);
-		newLocationIntent = PendingIntent.getService(this, 0, service, PendingIntent.FLAG_CANCEL_CURRENT);
-		try {
-			manager.removeUpdates(newLocationIntent);
-		} catch (NullPointerException e) {
-			// i guess updates were already removed
-		}
-		try {
-			unregisterReceiver(receiver);
-		} catch(IllegalArgumentException e) {
-			// ditto logic
-		}
+		
+		// reset the settings to reflect the new bool
+		
+		unregisterReceiver(receiver);
 		invalidateOptionsMenu(); // re create the menu
+		newLocationIntent.cancel();
+		Log.d("yo", "stopped");
+		
 	}
 
 	public void getLocations() {
@@ -242,10 +244,35 @@ public class TrailActivity extends Activity {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		settings = getSharedPreferences(PREF, 0);
+		if (settings.contains("updating")) {
+			updating = settings.getBoolean("updating", false);
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("updating", updating);
+		editor.commit();
+	}
+
+	@Override
 	public void onDestroy() {
 		// perform cleanup
 		super.onDestroy();
-		stopRecording();
+		if (updating) {
+			stopRecording();
+		}
+		
+		settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("updating", updating);
+		editor.commit();
 	}
 
 

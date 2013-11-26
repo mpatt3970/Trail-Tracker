@@ -30,6 +30,7 @@ import mines.edu.patterson_powell_trailtracker.R;
 import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +51,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 
 public class MainActivity extends ListActivity implements NameFragment.Listener {
+	
+	public static final String PREF = "MyPrefsFile"; //filename for the shared preferences file
+	SharedPreferences settings; 
+	
 	private static final int NEW_TRAIL_DIALOG = 1;
 	private static final int EDIT_NAME_DIALOG = 2;
 
@@ -146,8 +151,10 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 		TextView text = (TextView)v;
 		selectedWord = text.getText().toString();
 		Intent myIntent = new Intent(this, TrailActivity.class);
-		myIntent.putExtra("name", selectedWord);
-		myIntent.putExtra("new_trail", false);
+		myIntent.putExtra("name", selectedWord);settings = getSharedPreferences(PREF, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("updating", false);
+		editor.commit();
 		startActivity(myIntent);
 	}
 
@@ -272,7 +279,10 @@ public class MainActivity extends ListActivity implements NameFragment.Listener 
 		} else {
 			Intent trail = new Intent(this, TrailActivity.class);
 			trail.putExtra("name", input);
-			trail.putExtra("new_trail", true);
+			settings = getSharedPreferences(PREF, 0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean("updating", true);
+			editor.commit();
 			startActivity(trail);
 		}
 	}
